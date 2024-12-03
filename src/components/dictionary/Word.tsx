@@ -46,7 +46,7 @@ export default function Word({ searchQuery }: WordProps) {
   return (
     <div className="m-5 sm:m-10 xl:my-16 xl:mx-20">
       {isLoading ? (
-        <div>로딩 중...</div>
+        <div>Loading...</div>
       ) : (
         <>
           {searchQuery && (

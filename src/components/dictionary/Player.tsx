@@ -1,9 +1,32 @@
-import ClubPicker from "components/layout/ClubPicker";
-import { players } from "data/dummy/player";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getPlayers } from "api/dictionaryApi";
 import { HiOutlineSearch } from "react-icons/hi";
+import ClubPicker from "components/layout/ClubPicker";
+import { BaseballPlayer } from "types/player";
 
 export default function Player() {
+  const [players, setPlayers] = useState<BaseballPlayer[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [cursorId, setCursorId] = useState<number | null>(null);
+  const [cursorName, setCursorName] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      setIsLoading(true);
+      try {
+        const playersData = await getPlayers(1000, cursorId, cursorName);
+        setPlayers(playersData);
+      } catch (error) {
+        console.error("Error fetching players:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPlayers();
+  }, [cursorId, cursorName]);
+
   return (
     <div className="flex-1">
       <ClubPicker />
@@ -18,35 +41,41 @@ export default function Player() {
           className="text-dark2 cursor-pointer -ml-12"
         />
       </div>
-      <div className="w-[350px] sm:w-4/5 flex flex-col gap-5 mx-auto mb-12">
-        {players.map((player, index) => (
-          <div className="w-full bg-white flex flex-col sm:flex-row p-9 gap-9 xl:gap-20 items-center">
-            <img src={player.image_path} alt="path" className="w-40 xl:w-56" />
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center">
-                <h3 className="font-bold text-2xl xl:text-3xl">
-                  {player.name}
-                </h3>
-                <img
-                  src={player.logo_path}
-                  alt="path"
-                  className="w-11 xl:w-14 ml-1"
-                />
-              </div>
-              <div className="flex flex-col lg:flex-row text-20px gap-1">
-                <p>{player.birth_date} |</p>
-                <p>{player.position} |</p>
-                <p>{player.physique}</p>
-              </div>
-              <div className="flex flex-col lg:flex-row text-20px gap-1">
-                <p>AVG/ERA: {player.avg} |</p>
-                <p>AB/SHO: {player.ab} |</p>
-                <p>HR/WPCT: {player.hr}</p>
+
+      {isLoading ? (
+        <div className="m-5 lg:m-10">Loading...</div>
+      ) : (
+        <div className="w-[350px] sm:w-4/5 flex flex-col gap-5 mx-auto mb-12">
+          {players.map((player, index) => (
+            <div
+              key={player.playerId}
+              className="w-full bg-white flex flex-col sm:flex-row p-9 gap-9 xl:gap-20 items-center"
+            >
+              <div className="w-40 xl:w-56" />
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center">
+                  <h3 className="font-bold text-2xl xl:text-3xl">
+                    {player.name}
+                  </h3>
+                  <h3 className="">{player.team}</h3>
+                </div>
+                <div className="flex flex-col lg:flex-row text-20px gap-1">
+                  <p>no.{player.no} |</p>
+                  <p>{player.position} |</p>
+                  <p>{player.hwSpec} |</p>
+                  <p>{player.birth} </p>
+                </div>
+                <div className="flex flex-col lg:flex-row text-20px gap-2">
+                  <p>AVG {player.avg ? player.avg : "-"} |</p>
+                  <p>OPS {player.ops ? player.ops : "-"} |</p>
+                  <p>ERA {player.era ? player.era : "-"}</p>
+                  <p>IP {player.ip ? player.ip : "-"}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
