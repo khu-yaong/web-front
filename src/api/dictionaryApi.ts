@@ -11,10 +11,10 @@ const apiClient = axios.create({
 });
 
 // 야구 용어 목록 조회
-export const getWords = async (pageSize: number = 100) => {
+export const getWords = async (pageSize: number = 100, query: string) => {
   try {
     const response = await apiClient.get(`/words`, {
-      params: { pageSize },
+      params: { pageSize, query },
     });
     return response.data;
   } catch (error) {

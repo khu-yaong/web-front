@@ -6,23 +6,28 @@ type WordItem = {
   description: string;
 };
 
-export default function Word() {
+type WordProps = {
+  searchQuery: string;
+};
+
+export default function Word({ searchQuery }: WordProps) {
   const [allWords, setAllWords] = useState<WordItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [wordsPerPage] = useState(7);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (query: string) => {
       try {
-        const response = await getWords(100); // 모든 단어를 가져옴
+        // 검색어가 있으면 검색 API 호출, 없으면 전체 단어 호출
+        const response = await getWords(100, query);
         setAllWords(response.data);
       } catch (error) {
         console.error("API Error:", error);
       }
     };
 
-    fetchData();
-  }, []);
+    fetchData(searchQuery);
+  }, [searchQuery]);
 
   const indexOfLastWord = currentPage * wordsPerPage; // 현재 페이지 마지막 단어의 인덱스
   const indexOfFirstWord = indexOfLastWord - wordsPerPage; // 현재 페이지 첫 번째 단어의 인덱스
@@ -36,6 +41,7 @@ export default function Word() {
 
   return (
     <div className="m-5 sm:m-10 xl:my-16 xl:mx-20">
+      {searchQuery && <p>{currentWords.length}개의 검색결과가 있습니다.</p>}
       {currentWords.map((item, index) => (
         <div
           key={index}
@@ -57,22 +63,23 @@ export default function Word() {
         </div>
       ))}
 
-      {/* 페이지네이션 버튼 */}
-      <div className="flex justify-center mt-10">
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            className={`px-4 py-2 mx-1 mb-5 sm:mb-0 xl:mx-1.5 text-sm sm:text-lg xl:text-xl ${
-              index + 1 === currentPage
-                ? "bg-emerald-500  text-white"
-                : "bg-gray-200 hover:bg-emerald-500 hover:text-white text-black"
-            } rounded`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      {!searchQuery && (
+        <div className="flex justify-center mt-10">
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handlePageChange(index + 1)}
+              className={`px-4 py-2 mx-1 mb-5 md:my-auto xl:mx-1.5 text-sm sm:text-lg xl:text-xl ${
+                index + 1 === currentPage
+                  ? "bg-emerald-500  text-white"
+                  : "bg-gray-200 hover:bg-emerald-500 hover:text-white text-black"
+              } rounded`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

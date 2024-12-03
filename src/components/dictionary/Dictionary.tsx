@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import Word from "./Word";
 
 export default function Dictionary() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <div className="flex-1">
       <div className="w-full py-4 lg:py-6 flex justify-around items-center bg-white">
@@ -11,7 +17,9 @@ export default function Dictionary() {
           <input
             type="text"
             placeholder="용어를 검색하세요"
-            className="w-full border-light1 border-2 rounded-3xl text-xs lg:text-sm xl:text-base px-5 py-4"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="w-full border-light1 border-2 rounded-3xl text-sm sm:text-lg lg:text-xl px-5 py-2 lg:py-3"
           />
           <HiOutlineSearch
             size={26}
@@ -19,7 +27,7 @@ export default function Dictionary() {
           />
         </div>
       </div>
-      <Word />
+      <Word searchQuery={searchQuery} />
     </div>
   );
 }
