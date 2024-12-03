@@ -41,11 +41,15 @@ export default function Word({ searchQuery }: WordProps) {
 
   return (
     <div className="m-5 sm:m-10 xl:my-16 xl:mx-20">
-      {searchQuery && <p>{currentWords.length}개의 검색결과가 있습니다.</p>}
+      {searchQuery && (
+        <p className="text-lg ml-2">
+          {currentWords.length}개의 검색결과가 있습니다.
+        </p>
+      )}
       {currentWords.map((item, index) => (
         <div
           key={index}
-          className="w-full flex flex-col bg-white p-6 lg:p-10 my-8"
+          className="w-full flex flex-col bg-white p-6 lg:p-10 my-6"
         >
           <div className="w-full flex items-center mb-5">
             <img

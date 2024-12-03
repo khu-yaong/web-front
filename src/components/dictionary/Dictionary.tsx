@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import Word from "./Word";
+import useDebounce from "hooks/useDebounce";
 
 export default function Dictionary() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -8,6 +9,8 @@ export default function Dictionary() {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
+
+  const debouncedSearchQuery = useDebounce(searchQuery, 500); // 500ms 지연
 
   return (
     <div className="flex-1">
@@ -27,7 +30,7 @@ export default function Dictionary() {
           />
         </div>
       </div>
-      <Word searchQuery={searchQuery} />
+      <Word searchQuery={debouncedSearchQuery} />
     </div>
   );
 }
