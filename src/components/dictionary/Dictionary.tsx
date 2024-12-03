@@ -1,7 +1,6 @@
 import React from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import Word from "./Word";
-import { words } from "data/dummy/dictionary";
 
 export default function Dictionary() {
   return (
@@ -20,7 +19,7 @@ export default function Dictionary() {
           />
         </div>
       </div>
-      <Word word={words} />
+      <Word />
     </div>
   );
 }
