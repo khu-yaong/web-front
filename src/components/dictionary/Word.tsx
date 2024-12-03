@@ -35,13 +35,13 @@ export default function Word() {
   const totalPages = Math.ceil(allWords.length / wordsPerPage);
 
   return (
-    <div className="m-10 xl:m-20">
+    <div className="m-5 sm:m-10 xl:my-16 xl:mx-20">
       {currentWords.map((item, index) => (
         <div
           key={index}
-          className="w-full flex flex-col xl:flex-row bg-white p-6 lg:p-10 my-8 xl:items-center"
+          className="w-full flex flex-col bg-white p-6 lg:p-10 my-8"
         >
-          <div className="w-36 xl:w-52 flex items-center mb-5 xl:m-0">
+          <div className="w-full flex items-center mb-5">
             <img
               src="/assets/images/baseball_icon.svg"
               alt="icon"
@@ -51,7 +51,7 @@ export default function Word() {
               {item.word}
             </h1>
           </div>
-          <p className="flex-1 text-lg lg:text-xl xl:text-22 p-0 xl:pr-10">
+          <p className="flex-1 max-h-48 text-lg lg:text-xl xl:text-22 p-0 xl:pr-10 overflow-auto">
             {item.description}
           </p>
         </div>
@@ -63,10 +63,10 @@ export default function Word() {
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={`px-4 py-2 mx-1 xl:mx-1.5 sm:text-lg xl:text-xl ${
+            className={`px-4 py-2 mx-1 mb-5 sm:mb-0 xl:mx-1.5 text-sm sm:text-lg xl:text-xl ${
               index + 1 === currentPage
-                ? "bg-emerald-500 text-white"
-                : "bg-gray-200 text-black"
+                ? "bg-emerald-500  text-white"
+                : "bg-gray-200 hover:bg-emerald-500 hover:text-white text-black"
             } rounded`}
           >
             {index + 1}
