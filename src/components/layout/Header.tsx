@@ -19,7 +19,7 @@ export default function Header() {
     if (accessToken) {
       fetchMemberInfo();
     }
-  }, [accessToken, fetchMemberInfo]);
+  }, [accessToken]);
 
   // 로그아웃 처리
   const handleSignOut = () => {

@@ -1,9 +1,78 @@
+import React, { useState, useEffect } from "react";
+import { getPlayers } from "api/dictionaryApi";
+import {
+  HiOutlineSearch,
+  HiOutlineChevronLeft,
+  HiOutlineChevronRight,
+} from "react-icons/hi";
 import ClubPicker from "components/layout/ClubPicker";
-import { players } from "data/dummy/player";
-import React from "react";
-import { HiOutlineSearch } from "react-icons/hi";
+import { BaseballPlayer } from "types/player";
+import { clubs } from "data/clubs";
 
 export default function Player() {
+  const [players, setPlayers] = useState<BaseballPlayer[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [cursorId, setCursorId] = useState<number | null>(null);
+  const [cursorName, setCursorName] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [wordsPerPage] = useState(10);
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      setIsLoading(true);
+      try {
+        const playersData = await getPlayers(1000, cursorId, cursorName);
+        setPlayers(playersData);
+      } catch (error) {
+        console.error("Error fetching players:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPlayers();
+  }, [cursorId, cursorName]);
+
+  const indexOfLastPlayer = currentPage * wordsPerPage;
+  const indexOfFirstPlayer = indexOfLastPlayer - wordsPerPage;
+  const currentPlayers = players.slice(indexOfFirstPlayer, indexOfLastPlayer);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const totalPages = Math.ceil(players.length / wordsPerPage);
+
+  const getDisplayedPages = (): number[] => {
+    const pagesToShow: number[] = [];
+    const rangeSize = 7; // 한 구간에 표시할 페이지 수
+
+    // 현재 페이지가 속한 구간의 시작/끝 페이지 계산
+    const rangeStart =
+      Math.floor((currentPage - 1) / rangeSize) * rangeSize + 1;
+    const rangeEnd = Math.min(rangeStart + rangeSize - 1, totalPages);
+
+    // 구간의 페이지를 배열에 추가
+    for (let i = rangeStart; i <= rangeEnd; i++) {
+      pagesToShow.push(i);
+    }
+
+    return pagesToShow;
+  };
+
+  function getClubImage(team: string): string {
+    if (!team) {
+      return "/assets/images/logo.svg";
+    }
+    const club = clubs.find(
+      (club) => club.title === team || club.aliases === team
+    );
+
+    return club ? club.imagePath : "/assets/images/logo.svg";
+  }
+
   return (
     <div className="flex-1">
       <ClubPicker />
@@ -18,35 +87,90 @@ export default function Player() {
           className="text-dark2 cursor-pointer -ml-12"
         />
       </div>
-      <div className="w-[350px] sm:w-4/5 flex flex-col gap-5 mx-auto mb-12">
-        {players.map((player, index) => (
-          <div className="w-full bg-white flex flex-col sm:flex-row p-9 gap-9 xl:gap-20 items-center">
-            <img src={player.image_path} alt="path" className="w-40 xl:w-56" />
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center">
-                <h3 className="font-bold text-2xl xl:text-3xl">
-                  {player.name}
-                </h3>
-                <img
-                  src={player.logo_path}
-                  alt="path"
-                  className="w-11 xl:w-14 ml-1"
-                />
-              </div>
-              <div className="flex flex-col lg:flex-row text-20px gap-1">
-                <p>{player.birth_date} |</p>
-                <p>{player.position} |</p>
-                <p>{player.physique}</p>
-              </div>
-              <div className="flex flex-col lg:flex-row text-20px gap-1">
-                <p>AVG/ERA: {player.avg} |</p>
-                <p>AB/SHO: {player.ab} |</p>
-                <p>HR/WPCT: {player.hr}</p>
+
+      {isLoading ? (
+        <div className="m-5 lg:m-10">Loading...</div>
+      ) : (
+        <div className="w-[350px] sm:w-4/5 flex flex-col gap-5 mx-auto mb-12">
+          {currentPlayers.map((player, index) => (
+            <div
+              key={player.playerId}
+              className="w-full bg-white flex flex-col sm:flex-row p-9 gap-9 xl:gap-20 items-center"
+            >
+              <div className="w-40 xl:w-56" />
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center">
+                  <h3 className="font-bold text-2xl xl:text-3xl">
+                    {player.name}
+                  </h3>
+                  <img
+                    src={
+                      player.team
+                        ? getClubImage(player.team)
+                        : "/assets/images/logo.svg"
+                    }
+                    alt={player.team || "unknown"}
+                    className="w-11 xl:w-14 ml-1.5"
+                  />
+                </div>
+                <div className="flex flex-col lg:flex-row text-20px gap-1">
+                  <p>no.{player.no} |</p>
+                  <p>{player.position} |</p>
+                  <p>{player.hwSpec} |</p>
+                  <p>{player.birth} </p>
+                </div>
+                <div className="flex flex-col lg:flex-row text-20px gap-2">
+                  <p>AVG {player.avg ? player.avg : "-"} |</p>
+                  <p>OPS {player.ops ? player.ops : "-"} |</p>
+                  <p>ERA {player.era ? player.era : "-"}</p>
+                  <p>IP {player.ip ? player.ip : "-"}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+          {!searchQuery && !isLoading && (
+            <div className="flex justify-center mt-10">
+              {currentPage > 1 ? (
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(1, prev - 1))
+                  }
+                  className="w-12 h-12 mx-1 xl:mx-1.5 bg-gray-200 hover:bg-emerald-500 hover:text-white text-black rounded justify-center"
+                >
+                  <HiOutlineChevronLeft size={25} className="w-full" />
+                </button>
+              ) : (
+                <div className="w-12 h-12 mx-1 xl:mx-1.5" />
+              )}
+              {getDisplayedPages().map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`w-12 h-12 mx-1 mb-5 md:my-auto xl:mx-1.5 text-sm sm:text-lg xl:text-xl ${
+                    page === currentPage
+                      ? "bg-emerald-500 text-white"
+                      : "bg-gray-200 hover:bg-emerald-500 hover:text-white text-black"
+                  } rounded`}
+                >
+                  {page}
+                </button>
+              ))}
+              {currentPage < totalPages ? (
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                  }
+                  className="w-12 h-12 mx-1 xl:mx-1.5 bg-gray-200 hover:bg-emerald-500 hover:text-white text-black rounded justify-center"
+                >
+                  <HiOutlineChevronRight size={25} className="w-full" />
+                </button>
+              ) : (
+                <div className="w-12 h-12 mx-1 xl:mx-1.5" />
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
