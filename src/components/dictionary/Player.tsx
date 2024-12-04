@@ -7,6 +7,7 @@ import {
 } from "react-icons/hi";
 import ClubPicker from "components/layout/ClubPicker";
 import { BaseballPlayer } from "types/player";
+import { clubs } from "data/clubs";
 
 export default function Player() {
   const [players, setPlayers] = useState<BaseballPlayer[]>([]);
@@ -61,6 +62,17 @@ export default function Player() {
     return pagesToShow;
   };
 
+  function getClubImage(team: string): string {
+    if (!team) {
+      return "/assets/images/logo.svg";
+    }
+    const club = clubs.find(
+      (club) => club.title === team || club.aliases === team
+    );
+
+    return club ? club.imagePath : "/assets/images/logo.svg";
+  }
+
   return (
     <div className="flex-1">
       <ClubPicker />
@@ -91,7 +103,15 @@ export default function Player() {
                   <h3 className="font-bold text-2xl xl:text-3xl">
                     {player.name}
                   </h3>
-                  <h3 className="">{player.team}</h3>
+                  <img
+                    src={
+                      player.team
+                        ? getClubImage(player.team)
+                        : "/assets/images/logo.svg"
+                    }
+                    alt={player.team || "unknown"}
+                    className="w-11 xl:w-14 ml-1.5"
+                  />
                 </div>
                 <div className="flex flex-col lg:flex-row text-20px gap-1">
                   <p>no.{player.no} |</p>
