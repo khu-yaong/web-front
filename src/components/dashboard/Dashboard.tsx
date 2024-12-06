@@ -15,7 +15,7 @@ export default function Dashboard() {
     const club = clubs.find(
       (c) => c.title === teamName || c.aliases === teamName
     );
-    return club?.imagePath || "/assets/images/logo.svg"; // 로고가 없으면 기본 이미지 사용
+    return club?.imagePath || "/assets/images/logo.svg";
   };
 
   if (loading) return <div className="m-20 text-2xl">Loading...</div>;

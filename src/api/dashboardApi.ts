@@ -1,5 +1,18 @@
 import axios from "axios";
 
+export interface SummaryStats {
+  R: string;
+  B: string;
+  E: string;
+  H: string;
+}
+
+export interface BaseRunners {
+  "1Base": string;
+  "2Base": string;
+  "3Base": string;
+}
+
 export interface MatchInfo {
   homeTeam: string;
   homeScore: string;
@@ -13,10 +26,19 @@ export interface MatchInfo {
   stadium: string;
   pitcherHome: string;
   pitcherAway: string;
+  inningScoresHome: string[];
+  inningScoresAway: string[];
+  formattedInningScoresHome: string[][];
+  formattedInningScoresAway: string[][];
+  summaryStats: SummaryStats[];
+  ballCount: number;
+  strikeCount: number;
+  outCount: number;
+  baseRunners: BaseRunners;
 }
 
 export const fetchMatchInfo = async (): Promise<MatchInfo> => {
-  const API_URL = "http://34.237.154.47:8080/api/fetch-aspx?id=20240815HTWO0";
+  const API_URL = "http://34.237.154.47:8080/api/fetch-aspx?id=20240815LGHH0";
   const TOKEN = localStorage.getItem("accessToken");
 
   try {
@@ -43,6 +65,19 @@ export const fetchMatchInfo = async (): Promise<MatchInfo> => {
       stadium: data.groundInfo.split(" ")[3],
       pitcherHome: data.teams.homeTeam.pitchers[0]?.name || "N/A",
       pitcherAway: data.teams.awayTeam.pitchers[0]?.name || "N/A",
+      inningScoresHome: data.liveBroadcast.inningScores[1],
+      inningScoresAway: data.liveBroadcast.inningScores[0],
+      formattedInningScoresHome: data.liveBroadcast.inningScores[1].map(
+        (score: string) => score.split("")
+      ),
+      formattedInningScoresAway: data.liveBroadcast.inningScores[0].map(
+        (score: string) => score.split("")
+      ),
+      summaryStats: data.liveBroadcast.summaryStats,
+      ballCount: data.currentPlay.ballCount,
+      strikeCount: data.currentPlay.strikeCount,
+      outCount: data.currentPlay.outCount,
+      baseRunners: data.currentPlay.baseRunners,
     };
   } catch (error) {
     console.error("Error fetching match info:", error);
