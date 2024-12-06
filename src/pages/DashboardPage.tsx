@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "components/layout/Sidebar";
 import { dashboardMenu } from "data/menu";
+import { fetchMatchData } from "store/slices/matchSlice";
+import { useAppDispatch } from "hooks/useAppDispatch";
 import { teamInfo } from "data/dummy/dashboard";
 
 export default function DashboardPage() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchMatchData());
+  }, [dispatch]);
+
   return (
     <div
       className="bg-light3 flex mt-[74px]"
