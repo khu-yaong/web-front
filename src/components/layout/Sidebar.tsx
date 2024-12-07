@@ -1,10 +1,4 @@
 import React from "react";
-import {
-  HiOutlineChat,
-  HiOutlineCog,
-  HiOutlineBell,
-  HiOutlineSearch,
-} from "react-icons/hi";
 import { IconType } from "react-icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -29,32 +23,14 @@ export default function Sidebar({ menu }: Props) {
     if (!link) return "";
     console.log("location: ", location);
     console.log("link: ", link);
-    return location.pathname.startsWith(link)  
+    return location.pathname.startsWith(link)
       ? "bg-main2 text-white"
       : "bg-white text-dark3 border border-dark3";
   };
 
   return (
     <div className="hidden md:flex w-[260px] xl:w-[310px] sticky top-[74px] h-[calc(100vh-74px)] bg-white flex-col items-center border-r-2 border-gray-200">
-      <div className="flex gap-4 xl:gap-8 mt-9 xl:mt-11 mb-4 xl:mb-6">
-        <HiOutlineChat size={35} color="#333" />
-        <HiOutlineCog size={35} color="#333" />
-        <HiOutlineBell size={35} color="#333" />
-      </div>
-
-      <div className="relative w-full flex items-center my-1 px-2 xl:px-4">
-        <input
-          type="text"
-          placeholder="게시글을 검색하세요"
-          className="w-full border-light1 border-2 rounded-3xl text-xs xl:text-base px-3 py-2"
-        />
-        <HiOutlineSearch
-          size={26}
-          className="xl:absolute right-7 text-dark2 cursor-pointer ml-2"
-        />
-      </div>
-
-      <div className="w-full grid grid-cols-2 gap-4 xl:gap-5 my-8 p-4">
+      <div className="w-full grid grid-cols-2 gap-4 xl:gap-5 mt-24 p-4">
         {menu.map((item, index) => (
           <div
             key={index}

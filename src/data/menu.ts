@@ -27,7 +27,7 @@ export const homeMenu = [
 ];
 
 export const mypageMenu = [
-  { title: "프로필", icon: HiOutlineUser, link: "/mypage/profile" },
+  //{ title: "프로필", icon: HiOutlineUser, link: "/mypage/profile" },
   {
     title: "야구 관람 일지",
     icon: HiOutlineCalendar,
@@ -38,7 +38,7 @@ export const mypageMenu = [
     icon: HiSearch,
     link: "/mypage/video",
   },
-  { title: "프로필 수정", icon: HiOutlinePencilAlt, link: "/mypage/edit" },
+  //{ title: "프로필 수정", icon: HiOutlinePencilAlt, link: "/mypage/edit" },
 ];
 
 export const dictionaryMenu = [

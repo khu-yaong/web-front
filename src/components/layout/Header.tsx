@@ -68,7 +68,7 @@ export default function Header() {
           My Page
         </Link>
       </div>
-      <div className="flex items-center justify-center space-x-3">
+      <div className="flex items-center justify-center space-x-3 mr-6">
         {accessToken ? (
           <button
             className="dark2 hover:text-black hover:font-semibold mx-2 cursor-pointer"
@@ -84,11 +84,6 @@ export default function Header() {
             Sign In
           </button>
         )}
-        <img
-          src={"/assets/images/chat.svg"}
-          alt="chat"
-          className="cursor-pointer"
-        />
         {memberInfo && (
           <img
             src={memberInfo.profileImageUrl}
