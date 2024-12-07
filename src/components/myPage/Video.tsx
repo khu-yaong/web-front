@@ -68,7 +68,7 @@ export default function Video() {
         className="mr-5 bg-white p-5 mb-10 grid gap-6"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         }}
       >
         {teamVideos.slice(0, 5).map((item, index) => (
@@ -105,7 +105,7 @@ export default function Video() {
         className="mr-5 bg-white p-5 mb-10 grid gap-6"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         }}
       >
         {recommendVideos.slice(0, 5).map((item, index) => (
@@ -121,7 +121,7 @@ export default function Video() {
             }}
           >
             <img src={item.thumbnail} alt="thumbnail" />
-            <h3 className="w-full whitespace-pre-wrap my-2 font-bold text-xl xl:text-22px line-clamp-2">
+            <h3 className="w-full whitespace-pre-wrap my-2 font-bold text-lg xl:text-xl line-clamp-2">
               {item.title}
             </h3>
           </div>

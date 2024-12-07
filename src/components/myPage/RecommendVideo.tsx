@@ -14,7 +14,7 @@ export default function RecommendVideo() {
         className="mx-7 my-10 bg-white p-5 mb-10 grid gap-6"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         }}
       >
         {videos.map((item, index) => (

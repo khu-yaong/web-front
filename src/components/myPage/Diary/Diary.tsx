@@ -39,7 +39,7 @@ export default function Diary() {
 
   console.log("응답 데이터:", filteredDiary);
   if (loading) {
-    return <div>Loading...</div>; // 로딩 중 메시지 표시
+    return <div className="m-16">Loading...</div>; // 로딩 중 메시지 표시
   }
 
   console.log(matchDates);

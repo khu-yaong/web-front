@@ -29,7 +29,7 @@ export default function Sidebar({ menu }: Props) {
   };
 
   return (
-    <div className="hidden md:flex w-[260px] xl:w-[310px] sticky top-[74px] h-[calc(100vh-74px)] bg-white flex-col items-center border-r-2 border-gray-200">
+    <div className="hidden md:flex w-[250px] xl:w-[280px] sticky top-[74px] h-[calc(100vh-74px)] bg-white flex-col items-center border-r-2 border-gray-200">
       <div className="w-full grid grid-cols-2 gap-4 xl:gap-5 mt-24 p-4">
         {menu.map((item, index) => (
           <div
@@ -40,7 +40,7 @@ export default function Sidebar({ menu }: Props) {
             onClick={() => item.link && navigate(item.link)}
           >
             <item.icon size={60} color="#99" className="xl:size-65" />
-            <p className="text-12px xl:text-base font-bold mt-1 hidden sm:block">
+            <p className="text-12px xl:text-sm font-bold mt-1 hidden sm:block">
               {item.title}
             </p>
           </div>

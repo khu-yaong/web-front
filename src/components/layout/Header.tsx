@@ -68,7 +68,7 @@ export default function Header() {
           My Page
         </Link>
       </div>
-      <div className="flex items-center justify-center space-x-3 mr-6">
+      <div className="flex items-center justify-center space-x-3">
         {accessToken ? (
           <button
             className="dark2 hover:text-black hover:font-semibold mx-2 cursor-pointer"
@@ -84,6 +84,7 @@ export default function Header() {
             Sign In
           </button>
         )}
+        <div className="w-10 h-10" />
         {memberInfo && (
           <img
             src={memberInfo.profileImageUrl}

@@ -4,7 +4,7 @@ import { posts } from "data/dummy/post";
 
 export default function Profile() {
   return (
-    <div className="py-8 pl-6 sm:py-12 sm:px-6 lg:py-18 lg:pl-3 xl:pl-10">
+    <div className="py-8 px-6 sm:py-12 lg:py-16 lg:px-9 xl:px-16">
       <div className="w-full flex flex-col lg:flex-row gap-4 lg:gap-8 justify-between">
         <div className="w-full lg:w-1/3 flex flex-col justify-center bg-white p-4 lg:px-5 lg:py-4">
           <p className="text-dark2 text-lg sm:text-xl">닉네임</p>
