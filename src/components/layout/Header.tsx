@@ -52,13 +52,19 @@ export default function Header() {
         <Link to="/home" className={getLinkClass("/home")}>
           Home
         </Link>
-        <Link to="/dictionary" className={getLinkClass("/dictionary")}>
+        <Link
+          to="/dictionary/words"
+          className={getLinkClass("/dictionary/words")}
+        >
           Dictionary
         </Link>
-        <Link to="/dashboard" className={getLinkClass("/dashboard")}>
+        <Link
+          to="/dashboard/match"
+          className={getLinkClass("/dashboard/match")}
+        >
           Dashboard
         </Link>
-        <Link to="/mypage" className={getLinkClass("/mypage")}>
+        <Link to="/mypage/profile" className={getLinkClass("/mypage/profile")}>
           My Page
         </Link>
       </div>

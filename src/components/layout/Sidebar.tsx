@@ -6,7 +6,7 @@ import {
   HiOutlineSearch,
 } from "react-icons/hi";
 import { IconType } from "react-icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 
@@ -22,7 +22,17 @@ type Props = {
 
 export default function Sidebar({ menu }: Props) {
   const navigate = useNavigate();
+  const location = useLocation();
   const memberInfo = useSelector((state: RootState) => state.member.memberInfo);
+
+  const getLinkClass = (link: string | undefined) => {
+    if (!link) return "";
+    console.log("location: ", location);
+    console.log("link: ", link);
+    return location.pathname.startsWith(link)  
+      ? "bg-main2 text-white"
+      : "bg-white text-dark3 border border-dark3";
+  };
 
   return (
     <div className="hidden md:flex w-[260px] xl:w-[310px] sticky top-[74px] h-[calc(100vh-74px)] bg-white flex-col items-center border-r-2 border-gray-200">
@@ -48,15 +58,13 @@ export default function Sidebar({ menu }: Props) {
         {menu.map((item, index) => (
           <div
             key={index}
-            className="w-full aspect-square flex flex-col justify-center items-center bg-white border-dark3 border rounded-2xl p-2 cursor-pointer"
+            className={`w-full aspect-square flex flex-col justify-center items-center rounded-2xl p-2 cursor-pointer ${getLinkClass(
+              item.link
+            )}`}
             onClick={() => item.link && navigate(item.link)}
           >
-            <item.icon
-              size={60}
-              color="#99"
-              className="xl:size-65 text-dark3"
-            />
-            <p className="text-dark3 text-12px xl:text-base font-bold mt-1 hidden sm:block">
+            <item.icon size={60} color="#99" className="xl:size-65" />
+            <p className="text-12px xl:text-base font-bold mt-1 hidden sm:block">
               {item.title}
             </p>
           </div>

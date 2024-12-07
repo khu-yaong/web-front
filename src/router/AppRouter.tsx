@@ -33,7 +33,7 @@ const AppRouter: React.FC = () => {
 
         <Route path="/home" element={<PrivateRoute element={<HomePage />} />} />
         <Route path="/mypage" element={<PrivateRoute element={<Mypage />} />}>
-          <Route index element={<Profile />} />
+          <Route path="profile" index element={<Profile />} />
           <Route path="diary" element={<Diary />} />
           <Route path="video" element={<VideoPage />}>
             <Route index element={<Video />} />
@@ -45,7 +45,7 @@ const AppRouter: React.FC = () => {
           path="/dictionary"
           element={<PrivateRoute element={<Dictionarypage />} />}
         >
-          <Route index element={<Dictionary />} />
+          <Route path="words" index element={<Dictionary />} />
           <Route path="quiz" element={<Quiz />} />
           <Route path="songs" element={<Song />} />
           <Route path="players" element={<Player />} />
@@ -54,7 +54,7 @@ const AppRouter: React.FC = () => {
           path="/dashboard"
           element={<PrivateRoute element={<DashboardPage />} />}
         >
-          <Route index element={<Dashboard />} />
+          <Route path="match" index element={<Dashboard />} />
           <Route path="record" element={<Score />} />
         </Route>
       </Routes>
