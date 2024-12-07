@@ -32,8 +32,8 @@ export default function Header() {
     return null;
 
   const getLinkClass = (path: string) =>
-    `dark2 text-xl hover:text-black hover:font-semibold ${
-      location.pathname === path ? "font-bold" : ""
+    `text-xl hover:text-black hover:font-semibold ${
+      location.pathname.startsWith(path) ? "font-bold" : ""
     }`;
 
   return (
@@ -52,19 +52,13 @@ export default function Header() {
         <Link to="/home" className={getLinkClass("/home")}>
           Home
         </Link>
-        <Link
-          to="/dictionary/words"
-          className={getLinkClass("/dictionary/words")}
-        >
+        <Link to="/dictionary/words" className={getLinkClass("/dictionary")}>
           Dictionary
         </Link>
-        <Link
-          to="/dashboard/match"
-          className={getLinkClass("/dashboard/match")}
-        >
+        <Link to="/dashboard/match" className={getLinkClass("/dashboard")}>
           Dashboard
         </Link>
-        <Link to="/mypage/profile" className={getLinkClass("/mypage/profile")}>
+        <Link to="/mypage/profile" className={getLinkClass("/mypage")}>
           My Page
         </Link>
       </div>
