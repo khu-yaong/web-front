@@ -6,9 +6,21 @@ const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     Accept: "*/*",
-    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
   },
 });
+
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // 응원 구단 영상 목록 조회
 export const getVideos = async () => {

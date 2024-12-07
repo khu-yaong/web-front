@@ -3,6 +3,7 @@ import authReducer from "../store/slices/authSlice";
 import memberReducer from "../store/slices/memberSlice";
 import calendarReducer from "../store/slices/calendarSlice";
 import matchReducer from "../store/slices/matchSlice";
+import videoReducer from "../store/slices/videoSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     member: memberReducer,
     calendar: calendarReducer,
     match: matchReducer,
+    video: videoReducer,
   },
 });
 

@@ -1,9 +1,13 @@
 import { getRecommendVideos, getVideos } from "api/videoApi";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setVideos, setReommendVideos } from "store/slices/videoSlice";
 
 export default function Video() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [teamVideos, setTeamVideos] = useState<any[]>([]);
   const [recommendVideos, setRecommendVideos] = useState<any[]>([]);
 
@@ -13,6 +17,7 @@ export default function Video() {
         const response = await getVideos();
         if (response.status === 200) {
           setTeamVideos(response.data.recommendVideos);
+          dispatch(setVideos(response.data.recommendVideos));
         } else {
           console.error("Failed to fetch videos");
         }
@@ -26,6 +31,7 @@ export default function Video() {
         const response = await getRecommendVideos();
         if (response.status === 200) {
           setRecommendVideos(response.data.recommendVideos);
+          dispatch(setReommendVideos(response.data.recommendVideos));
         } else {
           console.error("Failed to fetch videos");
         }
