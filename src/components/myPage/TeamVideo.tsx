@@ -45,7 +45,7 @@ export default function TeamVideo() {
               );
             }}
           >
-            <img src={item.image_path} alt="path" />
+            <img src={item.thumbnail} alt="path" />
             <h3 className="w-full whitespace-pre-wrap my-2 font-bold text-xl xl:text-2xl line-clamp-2">
               {item.title}
             </h3>

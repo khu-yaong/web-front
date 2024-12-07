@@ -45,3 +45,15 @@ export const getRecommendVideos = async () => {
     throw error;
   }
 };
+
+// 영상 조회
+export const videoClick = async (videoId: string) => {
+  const token = localStorage.getItem("accessToken");
+  return axios.post("http://34.237.154.47:8080/videos", null, {
+    headers: {
+      accept: "*/*",
+      Authorization: `Bearer ${token}`,
+    },
+    params: { videoId },
+  });
+};
