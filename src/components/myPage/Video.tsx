@@ -1,9 +1,43 @@
-import { recommend_video, team_video } from "data/dummy/video";
-import React from "react";
+import { getRecommendVideos, getVideos } from "api/videoApi";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Video() {
   const navigate = useNavigate();
+  const [teamVideos, setTeamVideos] = useState<any[]>([]);
+  const [recommendVideos, setRecommendVideos] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await getVideos();
+        if (response.status === 200) {
+          setTeamVideos(response.data.recommendVideos);
+        } else {
+          console.error("Failed to fetch videos");
+        }
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      }
+    };
+
+    const fetchRecommendVideos = async () => {
+      try {
+        const response = await getRecommendVideos();
+        if (response.status === 200) {
+          setRecommendVideos(response.data.recommendVideos);
+        } else {
+          console.error("Failed to fetch videos");
+        }
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      }
+    };
+
+    fetchVideos();
+    fetchRecommendVideos();
+  }, []);
+
   return (
     <div className="flex-1 py-8 pl-6 sm:py-12 sm:px-6 lg:py-20 lg:pl-3 xl:pl-10">
       <div className="mr-5 bg-white flex p-4 sm:py-6 sm:px-10 my-6 border items-center justify-between">
@@ -22,13 +56,13 @@ export default function Video() {
           gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
         }}
       >
-        {recommend_video.map((item, index) => (
+        {teamVideos.slice(0, 5).map((item, index) => (
           <div
             key={item.index}
             className="min-w-64 xl:max-w-96 mt-5 flex-shrink-0 flex flex-col"
           >
-            <img src={item.image_path} alt="path" />
-            <h3 className="w-full whitespace-pre-wrap my-2 font-bold text-xl xl:text-2xl line-clamp-2">
+            <img src={item.thumbnail} alt="thumbnail" />
+            <h3 className="w-full whitespace-pre-wrap my-2 font-bold text-lg xl:text-xl line-clamp-2">
               {item.title}
             </h3>
           </div>
@@ -52,13 +86,13 @@ export default function Video() {
           gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
         }}
       >
-        {team_video.map((item, index) => (
+        {recommendVideos.slice(0, 5).map((item, index) => (
           <div
             key={item.index}
             className="min-w-64 xl:max-w-96 mt-5 flex-shrink-0 flex flex-col"
           >
-            <img src={item.image_path} alt="path" />
-            <h3 className="w-full whitespace-pre-wrap my-2 font-bold text-xl xl:text-2xl line-clamp-2">
+            <img src={item.thumbnail} alt="thumbnail" />
+            <h3 className="w-full whitespace-pre-wrap my-2 font-bold text-xl xl:text-22px line-clamp-2">
               {item.title}
             </h3>
           </div>
