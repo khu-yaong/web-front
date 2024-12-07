@@ -39,9 +39,9 @@ export default function Video() {
   }, []);
 
   return (
-    <div className="flex-1 py-8 pl-6 sm:py-12 sm:px-6 lg:py-20 lg:pl-3 xl:pl-10">
-      <div className="mr-5 bg-white flex p-4 sm:py-6 sm:px-10 my-6 border items-center justify-between">
-        <h2 className="font-bold text-22px sm:text-3xl">맞춤 동영상</h2>
+    <div className="flex-1 py-8 pl-6 sm:py-12 sm:px-6 lg:py-10 lg:pl-3 xl:pl-10">
+      <div className="mr-5 bg-white flex p-4 sm:py-5 sm:px-10 my-6 border items-center justify-between">
+        <h2 className="font-bold text-22px sm:text-27px">맞춤 동영상</h2>
         <p
           className="text-dark3 text-lg sm:text-2xl font-bold cursor-pointer"
           onClick={() => navigate("recommend")}
@@ -53,7 +53,7 @@ export default function Video() {
         className="mr-5 bg-white p-5 mb-10 grid gap-6"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
         }}
       >
         {teamVideos.slice(0, 5).map((item, index) => (
@@ -68,8 +68,8 @@ export default function Video() {
           </div>
         ))}
       </div>
-      <div className="mr-5 bg-white flex p-4 sm:py-6 sm:px-10 my-6 border items-center justify-between">
-        <h2 className="font-bold text-22px sm:text-3xl">
+      <div className="mr-5 bg-white flex p-4 sm:py-5 sm:px-10 my-6 border items-center justify-between">
+        <h2 className="font-bold text-22px sm:text-27px">
           KIA 타이거즈 관련 영상
         </h2>
         <p
@@ -83,7 +83,7 @@ export default function Video() {
         className="mr-5 bg-white p-5 mb-10 grid gap-6"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
         }}
       >
         {recommendVideos.slice(0, 5).map((item, index) => (
