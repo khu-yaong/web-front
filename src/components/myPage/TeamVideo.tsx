@@ -31,7 +31,7 @@ export default function TeamVideo() {
         className="mx-8 my-10 bg-white p-5 mb-10 grid gap-6"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         }}
       >
         {teamVideos.map((item, index) => (
@@ -46,7 +46,7 @@ export default function TeamVideo() {
             }}
           >
             <img src={item.thumbnail} alt="path" />
-            <h3 className="w-full whitespace-pre-wrap my-2 font-bold text-xl xl:text-2xl line-clamp-2">
+            <h3 className="w-full whitespace-pre-wrap my-2 font-bold text-xl line-clamp-2">
               {item.title}
             </h3>
           </div>

@@ -19,8 +19,8 @@ export default function DashboardPage() {
       style={{ minHeight: "calc(100vh - 74px)" }}
     >
       <Sidebar menu={dashboardMenu} />
-      <div className="flex-1">
-        <div className="flex flex-col bg-white px-14 py-1 xl:py-4 text-dark1">
+      <div className="flex-1 pt-9">
+        {/* <div className="flex flex-col bg-white px-14 py-1 xl:py-4 text-dark1">
           <h1 className="text-[45px] font-bold px-10 pt-4">{teamInfo.name}</h1>
           <div className="w-4/5 flex text-22px px-16 pt-3 my-1 justify-between items-center">
             <div className="flex flex-col items-center">
@@ -48,7 +48,7 @@ export default function DashboardPage() {
               <p className="font-bold">{teamInfo.recentGames}</p>
             </div>
           </div>
-        </div>
+        </div> */}
         <Outlet />
       </div>
     </div>

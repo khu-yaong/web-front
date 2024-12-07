@@ -27,7 +27,7 @@ export const homeMenu = [
 ];
 
 export const mypageMenu = [
-  { title: "프로필", icon: HiOutlineUser, link: "/mypage" },
+  //{ title: "프로필", icon: HiOutlineUser, link: "/mypage/profile" },
   {
     title: "야구 관람 일지",
     icon: HiOutlineCalendar,
@@ -38,11 +38,11 @@ export const mypageMenu = [
     icon: HiSearch,
     link: "/mypage/video",
   },
-  { title: "프로필 수정", icon: HiOutlinePencilAlt, link: "/mypage/edit" },
+  //{ title: "프로필 수정", icon: HiOutlinePencilAlt, link: "/mypage/edit" },
 ];
 
 export const dictionaryMenu = [
-  { title: "야구 사전", icon: HiOutlineBookOpen, link: "/dictionary" },
+  { title: "야구 사전", icon: HiOutlineBookOpen, link: "/dictionary/words" },
   {
     title: "야구 퀴즈",
     icon: HiOutlineQuestionMarkCircle,
@@ -61,7 +61,7 @@ export const dictionaryMenu = [
 ];
 
 export const dashboardMenu = [
-  { title: "중계", icon: HiOutlinePlusCircle, link: "/dashboard" },
+  { title: "중계", icon: HiOutlinePlusCircle, link: "/dashboard/match" },
   {
     title: "득점",
     icon: HiStatusOnline,

@@ -86,7 +86,7 @@ export default function Feed({ posts }: FeedProps) {
           className="min-w-[440px] md:min-w-[520px] lg:min-w-xl xl:min-w-[700px] mx-2 md:mx-0 p-6 md:p-10 md:py-6 bg-white cursor-pointer"
           onClick={() => openModal(post)}
         >
-          <div className="flex items-center xl:px-4 mt-2">
+          <div className="flex items-center md:px-0.5 xl:px-5 mt-2">
             <img
               src={
                 post.authorProfileImage
@@ -94,17 +94,17 @@ export default function Feed({ posts }: FeedProps) {
                   : "/assets/images/default_profile.svg"
               }
               alt="profile"
-              className="w-[60px] xl:w-[70px]"
+              className="w-[40px] h-[40px] xl:w-[50px] xl:h-[50px] rounded-full ml-2 xl:ml-0"
             />
 
-            <div className="flex flex-col ml-1 md:ml-4 text-dark1">
+            <div className="flex flex-col ml-1.5 md:ml-2 text-dark1 mb-1.5">
               <p className="font-extrabold">{post.authorName}</p>
-              <p>{post.createdDate}</p>
+              <p className="text-sm">{post.createdDate}</p>
             </div>
           </div>
           <div className="px-2 py-1 md:px-2.5 xl:px-6">
-            <h2 className="font-bold text-dark1 text-lg">{post.title}</h2>
-            <p className="my-2 text-dark1">{post.content}</p>
+            <h2 className="font-bold text-dark1 text-lg mt-1">{post.title}</h2>
+            <p className="my-1 text-dark1">{post.content}</p>
             {post.imageUrl && (
               <img src={post.imageUrl} alt="sample" className="w-80 h-80" />
             )}
@@ -137,7 +137,7 @@ export default function Feed({ posts }: FeedProps) {
                     "/assets/images/default_profile.svg"
                   }
                   alt="profile"
-                  className="w-[50px] xl:w-[60px]"
+                  className="w-[40px] h-[40px] xl:w-[50px] xl:h-[50px] rounded-full"
                 />
                 <div className="ml-2 text-sm">
                   <h3 className="font-extrabold">{selectedPost.authorName}</h3>
@@ -152,7 +152,7 @@ export default function Feed({ posts }: FeedProps) {
                 <img
                   src={selectedPost.imageUrl}
                   alt="sample"
-                  className="w-full"
+                  className="mr-6"
                 />
               )}
               <div className="flex items-center gap-1.5 mt-5 mx-1">
@@ -166,7 +166,7 @@ export default function Feed({ posts }: FeedProps) {
                 <span>{selectedPost.countComment}</span>
               </div>
             </div>
-            <div className="w-full h-[620px] flex flex-col ml-4 -mt-7 py-4 items-start overflow-auto">
+            <div className="w-full h-[620px] flex flex-col ml-4 -mt-3.5 py-4 items-start overflow-auto">
               {comments.map((comment) => (
                 <div
                   key={comment.commentId}
@@ -189,7 +189,9 @@ export default function Feed({ posts }: FeedProps) {
                       </p>
                     </div>
                   </div>
-                  <p className="tex-sm m-1.5">{comment.content}</p>
+                  <p className="tex-sm my-1.5 ml-1 xl:ml-4">
+                    {comment.content}
+                  </p>
                 </div>
               ))}
               <div className="flex w-full h-14 mt-auto">
@@ -203,7 +205,7 @@ export default function Feed({ posts }: FeedProps) {
                   color="#666666"
                   size={20}
                   onClick={handleAddComment}
-                  className=" cursor-pointer -ml-7 mt-3"
+                  className=" cursor-pointer -ml-9 mt-[18px]"
                 />
               </div>
             </div>
