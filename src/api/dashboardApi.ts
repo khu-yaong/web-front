@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Batter, Pitcher } from "types/match";
 
 export interface SummaryStats {
   R: string;
@@ -11,6 +12,24 @@ export interface BaseRunners {
   "1Base": string;
   "2Base": string;
   "3Base": string;
+}
+
+export interface TeamInfo {
+  teamName: string;
+  teamEmblem: string;
+}
+
+export interface Team {
+  teamInfo: TeamInfo;
+  batters: Batter[];
+  pitchers: Pitcher[];
+}
+
+export interface GameData {
+  teams: {
+    awayTeam: Team;
+    homeTeam: Team;
+  };
 }
 
 export interface MatchInfo {
@@ -35,6 +54,7 @@ export interface MatchInfo {
   strikeCount: number;
   outCount: number;
   baseRunners: BaseRunners;
+  gameData: GameData;
 }
 
 export const fetchMatchInfo = async (): Promise<MatchInfo> => {
@@ -51,6 +71,59 @@ export const fetchMatchInfo = async (): Promise<MatchInfo> => {
 
     const data = response.data.data;
     console.log("dashboard: ", data);
+
+    const gameData: GameData = {
+      teams: {
+        awayTeam: {
+          teamInfo: {
+            teamName: data.teams.awayTeam.teamInfo.teamName,
+            teamEmblem: data.teams.awayTeam.teamInfo.teamEmblem,
+          },
+          batters: data.teams.awayTeam.batters.map(
+            (batter: any): Batter => ({
+              hits: batter.hits,
+              ab: batter.ab,
+              name: batter.name,
+              position: batter.position,
+              runs: batter.runs,
+            })
+          ),
+          pitchers: data.teams.awayTeam.pitchers.map(
+            (pitcher: any): Pitcher => ({
+              hits: pitcher.hits,
+              earnedRuns: pitcher.earnedRuns,
+              name: pitcher.name,
+              innings: pitcher.innings,
+              strikeOuts: pitcher.strikeOuts,
+            })
+          ),
+        },
+        homeTeam: {
+          teamInfo: {
+            teamName: data.teams.homeTeam.teamInfo.teamName,
+            teamEmblem: data.teams.homeTeam.teamInfo.teamEmblem,
+          },
+          batters: data.teams.homeTeam.batters.map(
+            (batter: any): Batter => ({
+              hits: batter.hits,
+              ab: batter.ab,
+              name: batter.name,
+              position: batter.position,
+              runs: batter.runs,
+            })
+          ),
+          pitchers: data.teams.homeTeam.pitchers.map(
+            (pitcher: any): Pitcher => ({
+              hits: pitcher.hits,
+              earnedRuns: pitcher.earnedRuns,
+              name: pitcher.name,
+              innings: pitcher.innings,
+              strikeOuts: pitcher.strikeOuts,
+            })
+          ),
+        },
+      },
+    };
 
     return {
       homeTeam: data.teams.homeTeam.teamInfo.teamName,
@@ -78,6 +151,7 @@ export const fetchMatchInfo = async (): Promise<MatchInfo> => {
       strikeCount: data.currentPlay.strikeCount,
       outCount: data.currentPlay.outCount,
       baseRunners: data.currentPlay.baseRunners,
+      gameData: gameData,
     };
   } catch (error) {
     console.error("Error fetching match info:", error);

@@ -65,6 +65,6 @@ export const dashboardMenu = [
   {
     title: "득점",
     icon: HiStatusOnline,
-    link: "/dashboard/score",
+    link: "/dashboard/record",
   },
 ];

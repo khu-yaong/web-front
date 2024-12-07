@@ -1,11 +1,26 @@
 import React, { useState } from "react";
-import { gameData } from "data/dummy/match";
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
+import { GameData, Team } from "types/match";
 
 export default function Score() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const { data, loading, error } = useSelector(
+    (state: RootState) => state.match
+  );
 
-  const teamsArray = Object.values(gameData.teams);
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+
+  if (loading) return <div className="m-20 text-2xl">Loading...</div>;
+  if (error) return <p className="text-red-600 m-20">{error}</p>;
+
+  if (!data) {
+    return <div className="m-20 text-xl">조회할 수 있는 경기가 없습니다.</div>;
+  }
+
+  const { gameData }: { gameData: GameData } = data;
+
+  const teamsArray: Team[] = Object.values(gameData.teams);
 
   const handlePrev = () => {
     if (currentSlide > 0) setCurrentSlide(currentSlide - 1);
@@ -89,7 +104,7 @@ export default function Score() {
       </button>
       <button
         onClick={handleNext}
-        className={`absolute top-1/2 -right-2 transform -translate-y-1/2 p-2 rounded ${
+        className={`absolute top-1/2 -right-4 transform -translate-y-1/2 p-2 rounded ${
           currentSlide === teamsArray.length - 1
             ? "opacity-40"
             : "opacity-100 cursor-pointer"
