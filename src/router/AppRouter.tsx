@@ -55,7 +55,7 @@ const AppRouter: React.FC = () => {
           element={<PrivateRoute element={<DashboardPage />} />}
         >
           <Route index element={<Dashboard />} />
-          <Route path="score" element={<Score />} />
+          <Route path="record" element={<Score />} />
         </Route>
       </Routes>
     </BrowserRouter>
