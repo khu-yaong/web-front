@@ -6,7 +6,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  accessToken: localStorage.getItem("accessToken") || null, // localStorage에서 초기값 설정
+  accessToken: localStorage.getItem("accessToken") || null,
 };
 
 const authSlice = createSlice({

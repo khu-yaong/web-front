@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store/store";
 import { logout } from "store/slices/authSlice";
 import { useMemberInfo } from "api/memberApi";
+//import { logoutAndClearVideos } from "store/slices/videoSlice";
 
 export default function Header() {
   const { fetchMemberInfo } = useMemberInfo();
@@ -24,6 +25,7 @@ export default function Header() {
   // 로그아웃 처리
   const handleSignOut = () => {
     dispatch(logout());
+    //dispatch(logoutAndClearVideos() as any);
     alert("로그아웃했습니다.");
   };
 
