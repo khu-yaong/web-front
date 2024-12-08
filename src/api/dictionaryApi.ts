@@ -50,3 +50,22 @@ export const getPlayers = async (
     throw error;
   }
 };
+
+// 투수 정보 조회
+export const getPitcher = async (playerId: string) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/players/${playerId}`, {
+      headers: {
+        Accept: "*/*",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      params: {
+        playerId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching pitcher data:", error);
+    throw error;
+  }
+};

@@ -9,8 +9,10 @@ import ClubPicker from "components/layout/ClubPicker";
 import { BaseballPlayer } from "types/player";
 import { clubs } from "data/clubs";
 import useDebounce from "hooks/useDebounce";
+import { useNavigate } from "react-router-dom";
 
 export default function Player() {
+  const navgaite = useNavigate();
   const [players, setPlayers] = useState<BaseballPlayer[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [cursorId, setCursorId] = useState<number | null>(null);
@@ -105,7 +107,12 @@ export default function Player() {
           {currentPlayers.map((player, index) => (
             <div
               key={player.playerId}
-              className="w-full bg-white flex flex-col sm:flex-row p-9 gap-9 xl:gap-20 items-center"
+              className="w-full bg-white flex flex-col sm:flex-row p-9 gap-9 xl:gap-20 items-center cursor-pointer"
+              onClick={() => {
+                player.position === "투수"
+                  ? navgaite(`pitcher/${player.playerId}`)
+                  : navgaite(`fielder/${player.playerId}`);
+              }}
             >
               <div className="w-40 xl:w-56" />
               <div className="flex flex-col gap-2">
