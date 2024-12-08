@@ -8,6 +8,7 @@ import {
 import ClubPicker from "components/layout/ClubPicker";
 import { BaseballPlayer } from "types/player";
 import { clubs } from "data/clubs";
+import useDebounce from "hooks/useDebounce";
 
 export default function Player() {
   const [players, setPlayers] = useState<BaseballPlayer[]>([]);
@@ -19,11 +20,13 @@ export default function Player() {
   const [currentPage, setCurrentPage] = useState(1);
   const [wordsPerPage] = useState(10);
 
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
   useEffect(() => {
-    const fetchPlayers = async () => {
+    const fetchPlayers = async (query: string) => {
       setIsLoading(true);
       try {
-        const playersData = await getPlayers(1000, cursorId, cursorName);
+        const playersData = await getPlayers(1000, cursorId, cursorName, query);
         setPlayers(playersData);
       } catch (error) {
         console.error("Error fetching players:", error);
@@ -32,8 +35,8 @@ export default function Player() {
       }
     };
 
-    fetchPlayers();
-  }, [cursorId, cursorName]);
+    fetchPlayers(debouncedSearchQuery);
+  }, [cursorId, cursorName, debouncedSearchQuery]);
 
   const indexOfLastPlayer = currentPage * wordsPerPage;
   const indexOfFirstPlayer = indexOfLastPlayer - wordsPerPage;
@@ -73,6 +76,10 @@ export default function Player() {
     return club ? club.imagePath : "/assets/images/logo.svg";
   }
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <div className="flex-1">
       <ClubPicker />
@@ -80,6 +87,8 @@ export default function Player() {
         <input
           type="text"
           placeholder="궁금한 야구 선수가 있나요?"
+          value={searchQuery}
+          onChange={handleSearchChange}
           className="w-full border-light1 border-2 rounded-3xl text-xs lg:text-sm xl:text-base px-6 xl:px-10 py-3 xl:py-4"
         />
         <HiOutlineSearch

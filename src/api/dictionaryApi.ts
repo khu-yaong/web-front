@@ -27,7 +27,8 @@ export const getWords = async (pageSize: number = 100, query: string) => {
 export const getPlayers = async (
   pageSize: number,
   cursorId: number | null,
-  cursorName: string | null
+  cursorName: string | null,
+  query: string | null
 ) => {
   try {
     const response = await apiClient.get(`/players`, {
@@ -35,6 +36,7 @@ export const getPlayers = async (
         pageSize: pageSize,
         cursorId: cursorId ?? null,
         cursorName: cursorName ?? null,
+        query: query,
       },
     });
 
