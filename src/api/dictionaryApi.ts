@@ -69,3 +69,23 @@ export const getPlayerInfo = async (playerId: string) => {
     throw error;
   }
 };
+
+// 야수 정보 수정 요청
+export const updatePlayerInfo = async (playerId: any, data: any) => {
+  try {
+    const response = await axios.patch(
+      `${API_BASE_URL}/players/${playerId}/fielders`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Authorization 헤더 (예시: 토큰을 localStorage에서 가져옴)
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating player data:", error);
+    throw error;
+  }
+};

@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPlayerInfo } from "api/dictionaryApi";
+import { getPlayerInfo, updatePlayerInfo } from "api/dictionaryApi";
 import { clubs } from "data/clubs";
 import { TbPencilMinus } from "react-icons/tb";
+import Modal from "components/layout/Modal";
 
 const FielderDetail: React.FC = () => {
   const { playerId } = useParams<Record<string, string>>();
 
   const [player, setPlayer] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 선수 정보 수정 요청값
+  const [battingAverage, setBattingAverage] = useState(""); // 타율
+  const [homeRuns, setHomeRuns] = useState(""); // 홈런
+  const [rbis, setRbis] = useState(""); // 타점
+  const [hits, setHits] = useState(""); // 안타
+  const [stolenBases, setStolenBases] = useState(""); // 도루
 
   useEffect(() => {
     const fetchPlayerData = async () => {
@@ -36,6 +45,28 @@ const FielderDetail: React.FC = () => {
   if (!player) {
     return <div className="m-20">Loading...</div>;
   }
+
+  const openModal = async () => {
+    setIsModalOpen(true);
+  };
+
+  const handleUpdatePlayer = async () => {
+    try {
+      const updatedData = {
+        battingAverage,
+        homeRuns,
+        rbis,
+        hits,
+        stolenBases,
+      };
+
+      await updatePlayerInfo(playerId, updatedData);
+
+      alert("정보 수정을 성공적으로 요청했습니다.");
+    } catch (error) {
+      alert("정보 수정 요청이 실패하였습니다.");
+    }
+  };
 
   function getClubImage(team: string): string {
     if (!team) {
@@ -110,6 +141,7 @@ const FielderDetail: React.FC = () => {
             size="36"
             color="#999"
             className="mt-5 cursor-pointer"
+            onClick={openModal}
           />
         </div>
       </div>
@@ -133,6 +165,70 @@ const FielderDetail: React.FC = () => {
           ))}
         </div>
       </div>
+      {isModalOpen && (
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <div className="flex flex-col h-[500px] items-center">
+            <h3 className="font-bold text-20px mb-1">선수 정보 수정 요청</h3>
+            <p className="text-dark2">수정할 정보를 입력해주세요</p>
+            <div className="w-[450px] border rounded-md mt-6 p-8 flex flex-col gap-4">
+              <div className="flex items-center justify-center">
+                <label className="text-dark1 w-11">타율</label>
+                <input
+                  value={battingAverage}
+                  onChange={(e) => setBattingAverage(e.target.value)}
+                  className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <label className="text-dark1 w-11">홈런</label>
+                <input
+                  value={homeRuns}
+                  onChange={(e) => setHomeRuns(e.target.value)}
+                  className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <label className="text-dark1 w-11">타점</label>
+                <input
+                  value={rbis}
+                  onChange={(e) => setRbis(e.target.value)}
+                  className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <label className="text-dark1 w-11">안타</label>
+                <input
+                  value={hits}
+                  onChange={(e) => setHits(e.target.value)}
+                  className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <label className="text-dark1 w-11">도루</label>
+                <input
+                  value={stolenBases}
+                  onChange={(e) => setStolenBases(e.target.value)}
+                  className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
+                />
+              </div>
+            </div>
+            <div className="flex gap-x-10 mt-8 font-bold">
+              <button
+                className="w-[160px] border p-2 rounded-md"
+                onClick={() => setIsModalOpen(false)}
+              >
+                취소
+              </button>
+              <button
+                className="w-[160px] bg-main2 text-white p-2 rounded-md"
+                onClick={handleUpdatePlayer}
+              >
+                수정 요청하기
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
