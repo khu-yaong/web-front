@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPlayerInfo } from "api/dictionaryApi";
 import { clubs } from "data/clubs";
+import { TbPencilMinus } from "react-icons/tb";
 
 const PitcherDetail: React.FC = () => {
   const { playerId } = useParams<Record<string, string>>();
@@ -69,9 +70,9 @@ const PitcherDetail: React.FC = () => {
     <div className="flex-1">
       <div
         key={player.playerId}
-        className="w-full bg-white px-8 md:px-10 lg:px-24 xl:px-36"
+        className="w-full bg-white flex py-8 px-6 md:px-0 lg:px-24 xl:px-36"
       >
-        <div className="xl:px-24 flex py-8 items-center xl:space-x-16">
+        <div className="mx-auto flex py-8 items-center xl:space-x-10 gap-2 lg:gap-4">
           <img
             src={
               player.team
@@ -92,14 +93,14 @@ const PitcherDetail: React.FC = () => {
                 {player.name}
               </h3>
             </div>
-            <div className="flex flex-col sm:flex-row text-sm md:text-base xl:text-20px gap-px lg:gap-1">
-              <p>no.{player.no} |</p>
-              <p>{player.position} |</p>
-              <p>{player.hwSpec} |</p>
-              <p>{player.birth} </p>
+            <div className="flex flex-col md:flex-row text-sm md:text-base xl:text-20px">
+              <p className="mr-0.5">no.{player.no} |</p>
+              <p className="mr-0.5">{player.position} |</p>
+              <p className="mr-0.5">{player.hwSpec} |</p>
+              <p className="mr-0.5">{player.birth} </p>
             </div>
-            <div className="flex flex-col sm:flex-row text-sm md:text-base xl:text-20px gap-2">
-              <p>
+            <div className="flex flex-col md:flex-row text-sm md:text-base xl:text-20px">
+              <p className="mr-1">
                 2024: ERA{" "}
                 {player.pitcherRecord.era ? player.pitcherRecord.era : "-"} |
               </p>
@@ -109,22 +110,27 @@ const PitcherDetail: React.FC = () => {
               </p>
             </div>
           </div>
+          <TbPencilMinus
+            size="36"
+            color="#999"
+            className="mt-5 cursor-pointer"
+          />
         </div>
       </div>
       <div className="flex flex-col mx-12 xl:mx-48 mt-4 mb-16">
-        <h1 className="font-bold text-lg md:text-22px xl:text-27px my-8 items-baseline xl:px-16">
+        <h1 className="font-bold text-lg md:text-22px xl:text-27px my-8 items-baseline xl:px-10">
           세부 기록
         </h1>
-        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-y-6 xl:gap-y-9 gap-x-4 lg:gap-x-12 xl:px-16">
+        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-y-6 xl:gap-y-9 gap-x-4 lg:gap-x-12 xl:px-10">
           {pitcherStats.map((stat) => (
             <div
               key={stat.key}
-              className="min-w-[300px] max-w-[550px] flex flex-col"
+              className="min-w-[300px] max-w-[550px] mr-auto lg:mr-0 flex flex-col"
             >
-              <p className="w-full font-bold text-white text-xl bg-[#999] text-center rounded-t-[10px] py-1">
+              <p className="w-full font-bold text-white text-lg lg:text-xl bg-[#999] text-center rounded-t-[10px] py-1">
                 {stat.label}
               </p>
-              <p className="w-full text-3xl bg-white text-center rounded-b-[10px] py-4 border border-[#999]">
+              <p className="w-full text-xl lg:text-3xl bg-white text-center rounded-b-[10px] py-4 border border-[#999]">
                 {stat.value ?? "-"}
               </p>
             </div>
