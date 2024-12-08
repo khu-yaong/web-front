@@ -10,4 +10,5 @@ export interface BaseballPlayer {
   ops: number | null;
   era: number | null;
   ip: string | null;
+  profile: string;
 }

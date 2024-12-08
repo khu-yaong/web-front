@@ -27,7 +27,8 @@ export const getWords = async (pageSize: number = 100, query: string) => {
 export const getPlayers = async (
   pageSize: number,
   cursorId: number | null,
-  cursorName: string | null
+  cursorName: string | null,
+  query: string | null
 ) => {
   try {
     const response = await apiClient.get(`/players`, {
@@ -35,6 +36,7 @@ export const getPlayers = async (
         pageSize: pageSize,
         cursorId: cursorId ?? null,
         cursorName: cursorName ?? null,
+        query: query,
       },
     });
 
@@ -45,6 +47,45 @@ export const getPlayers = async (
     }
   } catch (error) {
     console.error("API Error:", error);
+    throw error;
+  }
+};
+
+// 야구 선수 정보 조회
+export const getPlayerInfo = async (playerId: string) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/players/${playerId}`, {
+      headers: {
+        Accept: "*/*",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      params: {
+        playerId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching pitcher data:", error);
+    throw error;
+  }
+};
+
+// 야수 정보 수정 요청
+export const updatePlayerInfo = async (playerId: any, data: any) => {
+  try {
+    const response = await axios.patch(
+      `${API_BASE_URL}/players/${playerId}/fielders`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Authorization 헤더 (예시: 토큰을 localStorage에서 가져옴)
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating player data:", error);
     throw error;
   }
 };

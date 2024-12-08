@@ -8,8 +8,11 @@ import {
 import ClubPicker from "components/layout/ClubPicker";
 import { BaseballPlayer } from "types/player";
 import { clubs } from "data/clubs";
+import useDebounce from "hooks/useDebounce";
+import { useNavigate } from "react-router-dom";
 
 export default function Player() {
+  const navgaite = useNavigate();
   const [players, setPlayers] = useState<BaseballPlayer[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [cursorId, setCursorId] = useState<number | null>(null);
@@ -19,11 +22,13 @@ export default function Player() {
   const [currentPage, setCurrentPage] = useState(1);
   const [wordsPerPage] = useState(10);
 
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
   useEffect(() => {
-    const fetchPlayers = async () => {
+    const fetchPlayers = async (query: string) => {
       setIsLoading(true);
       try {
-        const playersData = await getPlayers(1000, cursorId, cursorName);
+        const playersData = await getPlayers(1000, cursorId, cursorName, query);
         setPlayers(playersData);
       } catch (error) {
         console.error("Error fetching players:", error);
@@ -32,8 +37,8 @@ export default function Player() {
       }
     };
 
-    fetchPlayers();
-  }, [cursorId, cursorName]);
+    fetchPlayers(debouncedSearchQuery);
+  }, [cursorId, cursorName, debouncedSearchQuery]);
 
   const indexOfLastPlayer = currentPage * wordsPerPage;
   const indexOfFirstPlayer = indexOfLastPlayer - wordsPerPage;
@@ -41,6 +46,7 @@ export default function Player() {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+    window.scrollTo(0, 0);
   };
 
   const totalPages = Math.ceil(players.length / wordsPerPage);
@@ -73,6 +79,10 @@ export default function Player() {
     return club ? club.imagePath : "/assets/images/logo.svg";
   }
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <div className="flex-1">
       <ClubPicker />
@@ -80,6 +90,8 @@ export default function Player() {
         <input
           type="text"
           placeholder="궁금한 야구 선수가 있나요?"
+          value={searchQuery}
+          onChange={handleSearchChange}
           className="w-full border-light1 border-2 rounded-3xl text-xs lg:text-sm xl:text-base px-6 xl:px-10 py-3 xl:py-4"
         />
         <HiOutlineSearch
@@ -89,26 +101,31 @@ export default function Player() {
       </div>
 
       {isLoading ? (
-        <div className="m-5 lg:m-10">Loading...</div>
+        <div className="m-5 lg:m-20">Loading...</div>
       ) : (
         <div className="w-[350px] sm:w-4/5 flex flex-col gap-5 mx-auto mb-12">
           {currentPlayers.map((player, index) => (
             <div
               key={player.playerId}
-              className="w-full bg-white flex flex-col sm:flex-row p-9 gap-9 xl:gap-20 items-center"
+              className="w-full bg-white flex flex-col sm:flex-row p-9 gap-9 xl:gap-20 items-center cursor-pointer"
+              onClick={() => {
+                player.position === "투수"
+                  ? navgaite(`pitcher/${player.playerId}`)
+                  : navgaite(`fielder/${player.playerId}`);
+              }}
             >
-              <div className="w-40 xl:w-56" />
+              <img
+                src={player.profile}
+                alt="profile"
+                className="ml-16 w-[150px]"
+              />
               <div className="flex flex-col gap-2">
                 <div className="flex items-center">
                   <h3 className="font-bold text-2xl xl:text-3xl">
                     {player.name}
                   </h3>
                   <img
-                    src={
-                      player.team
-                        ? getClubImage(player.team)
-                        : "/assets/images/logo.svg"
-                    }
+                    src={player.team ? getClubImage(player.team) : ""}
                     alt={player.team || "unknown"}
                     className="w-11 xl:w-14 ml-1.5"
                   />
@@ -132,9 +149,10 @@ export default function Player() {
             <div className="flex justify-center mt-10">
               {currentPage > 1 ? (
                 <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(1, prev - 1))
-                  }
+                  onClick={() => {
+                    setCurrentPage((prev) => Math.max(1, prev - 1));
+                    window.scrollTo(0, 0);
+                  }}
                   className="w-12 h-12 mx-1 xl:mx-1.5 bg-gray-200 hover:bg-emerald-500 hover:text-white text-black rounded justify-center"
                 >
                   <HiOutlineChevronLeft size={25} className="w-full" />
@@ -157,9 +175,10 @@ export default function Player() {
               ))}
               {currentPage < totalPages ? (
                 <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                  }
+                  onClick={() => {
+                    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+                    window.scrollTo(0, 0);
+                  }}
                   className="w-12 h-12 mx-1 xl:mx-1.5 bg-gray-200 hover:bg-emerald-500 hover:text-white text-black rounded justify-center"
                 >
                   <HiOutlineChevronRight size={25} className="w-full" />

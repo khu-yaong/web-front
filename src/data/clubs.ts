@@ -38,7 +38,7 @@ export const clubs: Club[] = [
   {
     imagePath: "/assets/images//club/hanhwa.svg",
     title: "한화",
-    aliases: "HANHWA",
+    aliases: "HANWHA",
   },
   {
     imagePath: "/assets/images//club/kia.svg",

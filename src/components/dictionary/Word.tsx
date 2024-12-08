@@ -38,6 +38,7 @@ export default function Word({ searchQuery }: WordProps) {
   const currentWords = allWords.slice(indexOfFirstWord, indexOfLastWord); // 현재 페이지 단어 목록
 
   const handlePageChange = (pageNumber: number) => {
+    window.scrollTo(0, 0);
     setCurrentPage(pageNumber);
   };
 

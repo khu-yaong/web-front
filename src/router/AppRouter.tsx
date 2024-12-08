@@ -21,6 +21,8 @@ import DashboardPage from "pages/DashboardPage";
 import Dashboard from "components/dashboard/Dashboard";
 import Score from "components/dashboard/Score";
 import PrivateRoute from "./PrivateRoute";
+import FielderDetail from "components/dictionary/FielderDetail";
+import PitcherDetail from "components/dictionary/PitcherDetail";
 
 const AppRouter: React.FC = () => {
   return (
@@ -49,6 +51,8 @@ const AppRouter: React.FC = () => {
           <Route path="quiz" element={<Quiz />} />
           <Route path="songs" element={<Song />} />
           <Route path="players" element={<Player />} />
+          <Route path="players/fielder/:playerId" element={<FielderDetail />} />
+          <Route path="players/pitcher/:playerId" element={<PitcherDetail />} />
         </Route>
         <Route
           path="/dashboard"
