@@ -44,6 +44,7 @@ export default function Player() {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+    window.scrollTo(0, 0);
   };
 
   const totalPages = Math.ceil(players.length / wordsPerPage);
