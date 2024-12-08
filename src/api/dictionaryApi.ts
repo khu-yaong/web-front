@@ -51,8 +51,8 @@ export const getPlayers = async (
   }
 };
 
-// 투수 정보 조회
-export const getPitcher = async (playerId: string) => {
+// 야구 선수 정보 조회
+export const getPlayerInfo = async (playerId: string) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/players/${playerId}`, {
       headers: {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPitcher } from "api/dictionaryApi";
+import { getPlayerInfo } from "api/dictionaryApi";
 import { clubs } from "data/clubs";
 
-const PlayerInfo: React.FC = () => {
+const PitcherDetail: React.FC = () => {
   const { playerId } = useParams<Record<string, string>>();
 
   const [player, setPlayer] = useState<any>(null);
@@ -17,7 +17,7 @@ const PlayerInfo: React.FC = () => {
       }
 
       try {
-        const response = await getPitcher(playerId);
+        const response = await getPlayerInfo(playerId);
         setPlayer(response.data);
         console.log(response.data);
       } catch (err) {
@@ -126,4 +126,4 @@ const PlayerInfo: React.FC = () => {
   );
 };
 
-export default PlayerInfo;
+export default PitcherDetail;
