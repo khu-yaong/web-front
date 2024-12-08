@@ -21,8 +21,6 @@ export default function Sidebar({ menu }: Props) {
 
   const getLinkClass = (link: string | undefined) => {
     if (!link) return "";
-    console.log("location: ", location);
-    console.log("link: ", link);
     return location.pathname.startsWith(link)
       ? "bg-main2 text-white"
       : "bg-white text-dark3 border border-dark3";
