@@ -142,9 +142,10 @@ export default function Player() {
             <div className="flex justify-center mt-10">
               {currentPage > 1 ? (
                 <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(1, prev - 1))
-                  }
+                  onClick={() => {
+                    setCurrentPage((prev) => Math.max(1, prev - 1));
+                    window.scrollTo(0, 0);
+                  }}
                   className="w-12 h-12 mx-1 xl:mx-1.5 bg-gray-200 hover:bg-emerald-500 hover:text-white text-black rounded justify-center"
                 >
                   <HiOutlineChevronLeft size={25} className="w-full" />
@@ -167,9 +168,10 @@ export default function Player() {
               ))}
               {currentPage < totalPages ? (
                 <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                  }
+                  onClick={() => {
+                    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+                    window.scrollTo(0, 0);
+                  }}
                   className="w-12 h-12 mx-1 xl:mx-1.5 bg-gray-200 hover:bg-emerald-500 hover:text-white text-black rounded justify-center"
                 >
                   <HiOutlineChevronRight size={25} className="w-full" />
