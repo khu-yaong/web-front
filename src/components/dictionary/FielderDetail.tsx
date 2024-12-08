@@ -33,7 +33,7 @@ const FielderDetail: React.FC = () => {
   }
 
   if (!player) {
-    return <div>Loading...</div>;
+    return <div className="m-20">Loading...</div>;
   }
 
   function getClubImage(team: string): string {
@@ -66,36 +66,44 @@ const FielderDetail: React.FC = () => {
     <div className="flex-1">
       <div
         key={player.playerId}
-        className="w-full bg-white flex py-8 px-8 md:px-10 lg:px-24 xl:px-36 items-center justify-center xl:space-x-16"
+        className="w-full bg-white flex py-8 px-8 md:px-10 lg:px-24 xl:px-36"
       >
-        <img
-          src={
-            player.team ? getClubImage(player.team) : "/assets/images/logo.svg"
-          }
-          alt={player.team || "unknown"}
-          className="w-20 md:w-24 lg:w-36 xl:w-44 ml-1.5"
-        />
-        <div className="w-24 md:w-20 lg:w-36 xl:w-44" />
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center">
-            <h3 className="font-bold text-lg md:text-22px xl:text-27px">
-              {player.name}
-            </h3>
-          </div>
-          <div className="flex flex-col sm:flex-row text-sm md:text-base xl:text-20px gap-px lg:gap-1">
-            <p>no.{player.no} |</p>
-            <p>{player.position} |</p>
-            <p>{player.hwSpec} |</p>
-            <p>{player.birth} </p>
-          </div>
-          <div className="flex flex-col sm:flex-row text-sm md:text-base xl:text-20px gap-2">
-            <p>
-              2024: AVG{" "}
-              {player.fielderRecord.avg ? player.fielderRecord.avg : "-"} |
-            </p>
-            <p>
-              OPS {player.fielderRecord.ops ? player.fielderRecord.ops : "-"}{" "}
-            </p>
+        <div className="xl:px-24 flex py-8 items-center xl:space-x-16">
+          <img
+            src={
+              player.team
+                ? getClubImage(player.team)
+                : "/assets/images/logo.svg"
+            }
+            alt={player.team || "unknown"}
+            className="w-20 md:w-20 xl:w-36 ml-1.5"
+          />
+          <img
+            src={player.profile}
+            alt="profile"
+            className="w-24 md:w-20 xl:w-36"
+          />
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center">
+              <h3 className="font-bold text-lg md:text-22px xl:text-27px">
+                {player.name}
+              </h3>
+            </div>
+            <div className="flex flex-col sm:flex-row text-sm md:text-base xl:text-20px gap-px lg:gap-1">
+              <p>no.{player.no} |</p>
+              <p>{player.position} |</p>
+              <p>{player.hwSpec} |</p>
+              <p>{player.birth} </p>
+            </div>
+            <div className="flex flex-col sm:flex-row text-sm md:text-base xl:text-20px gap-2">
+              <p>
+                2024: AVG{" "}
+                {player.fielderRecord.avg ? player.fielderRecord.avg : "-"} |
+              </p>
+              <p>
+                OPS {player.fielderRecord.ops ? player.fielderRecord.ops : "-"}{" "}
+              </p>
+            </div>
           </div>
         </div>
       </div>

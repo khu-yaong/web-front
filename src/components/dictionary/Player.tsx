@@ -101,7 +101,7 @@ export default function Player() {
       </div>
 
       {isLoading ? (
-        <div className="m-5 lg:m-10">Loading...</div>
+        <div className="m-5 lg:m-20">Loading...</div>
       ) : (
         <div className="w-[350px] sm:w-4/5 flex flex-col gap-5 mx-auto mb-12">
           {currentPlayers.map((player, index) => (
@@ -114,18 +114,18 @@ export default function Player() {
                   : navgaite(`fielder/${player.playerId}`);
               }}
             >
-              <div className="w-40 xl:w-56" />
+              <img
+                src={player.profile}
+                alt="profile"
+                className="ml-16 w-[150px]"
+              />
               <div className="flex flex-col gap-2">
                 <div className="flex items-center">
                   <h3 className="font-bold text-2xl xl:text-3xl">
                     {player.name}
                   </h3>
                   <img
-                    src={
-                      player.team
-                        ? getClubImage(player.team)
-                        : "/assets/images/logo.svg"
-                    }
+                    src={player.team ? getClubImage(player.team) : ""}
                     alt={player.team || "unknown"}
                     className="w-11 xl:w-14 ml-1.5"
                   />
