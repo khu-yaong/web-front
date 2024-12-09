@@ -1,9 +1,24 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
+import { getRecommendVideos } from "api/videoApi";
+import React, { useEffect, useState } from "react";
 
 export default function RecommendVideo() {
-  const videos = useSelector((state: RootState) => state.video.recommendVideos);
+  const [recommendVideos, setRecommendVideos] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await getRecommendVideos();
+        if (response.status === 200) {
+          setRecommendVideos(response.data.recommendVideos);
+        } else {
+          console.error("Failed to fetch videos");
+        }
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      }
+    };
+    fetchVideos();
+  }, []);
 
   return (
     <div className="w-full">
@@ -17,7 +32,7 @@ export default function RecommendVideo() {
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         }}
       >
-        {videos.map((item, index) => (
+        {recommendVideos.map((item, index) => (
           <div
             key={`${item.index}-${index}`}
             className="min-w-64 xl:max-w-96 mt-5 flex-shrink-0 flex flex-col cursor-pointer"
