@@ -130,6 +130,15 @@ export default function Feed({ posts }: FeedProps) {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${month}.${day}. ${hours}:${minutes}`;
+  };
+
   return (
     <div className="flex flex-col gap-10">
       {likePosts.map((post) => (
@@ -151,7 +160,7 @@ export default function Feed({ posts }: FeedProps) {
 
             <div className="flex flex-col ml-1.5 md:ml-2 text-dark1 mb-1.5">
               <p className="font-extrabold">{post.authorName}</p>
-              <p className="text-sm">{post.createdDate}</p>
+              <p className="text-sm">{formatDate(post.createdDate)}</p>
             </div>
           </div>
           <div className="px-2 py-1 md:px-2.5 xl:px-6">
@@ -195,7 +204,7 @@ export default function Feed({ posts }: FeedProps) {
                 />
                 <div className="ml-2 text-sm">
                   <h3 className="font-extrabold">{selectedPost.authorName}</h3>
-                  <p>{selectedPost.createdDate}</p>
+                  <p>{formatDate(selectedPost.createdDate)}</p>
                 </div>
               </div>
               <h2 className="font-bold text-dark1 text-xl mb-2 mx-1">
@@ -244,7 +253,7 @@ export default function Feed({ posts }: FeedProps) {
                     <div className="flex flex-col ml-1 text-sm text-dark1">
                       <p className="font-extrabold">{comment.authorName}</p>
                       <p className="text-dark3 text-xs">
-                        {comment.createdDate}
+                        {formatDate(comment.createdDate)}
                       </p>
                     </div>
                   </div>
