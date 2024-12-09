@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { quizData } from "data/dummy/quiz";
+
+type QuizData = {
+  question: string;
+  correctAnswer: string;
+  wrongAnswers: string[];
+};
 
 export default function Quiz() {
+  const [quizData, setQuizData] = useState<QuizData[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
   const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [toast, setToast] = useState<{
     message: string;
@@ -19,6 +27,60 @@ export default function Quiz() {
       setToast(null);
     }, 2000);
   };
+
+  useEffect(() => {
+    const fetchQuizData = async () => {
+      const token = localStorage.getItem("accessToken");
+      try {
+        const response = await axios.get("http://34.237.154.47:8080/quiz/", {
+          headers: {
+            accept: "*/*",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("응답", response);
+        if (response.data?.status === 200 && response.data?.data) {
+          setQuizData(response.data.data);
+        } else {
+          throw new Error("Failed to fetch quiz data");
+        }
+      } catch (err) {
+        setError("오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuizData();
+  }, []);
+
+  const currentQuiz = quizData[currentIndex];
+
+  useEffect(() => {
+    if (currentQuiz) {
+      const answers = [
+        ...(currentQuiz?.wrongAnswers || []),
+        currentQuiz?.correctAnswer,
+      ].sort(() => Math.random() - 0.5);
+      setShuffledAnswers(answers);
+    }
+  }, [currentQuiz]);
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <p>로딩 중...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <p>{error}</p>
+      </div>
+    );
+  }
 
   const handleAnswerClick = (isCorrect: boolean) => {
     if (isCorrect) {
@@ -37,21 +99,6 @@ export default function Quiz() {
     setCorrectCount(0);
     setWrongCount(0);
   };
-
-  const currentQuiz = quizData[currentIndex];
-
-  useEffect(() => {
-    if (currentQuiz) {
-      const answers = [
-        ...(currentQuiz?.wrongAnswers || []),
-        currentQuiz?.correctAnswer,
-      ].sort(() => Math.random() - 0.5);
-      setShuffledAnswers(answers);
-    }
-  }, [currentQuiz]);
-
-  console.log(currentIndex);
-  console.log(quizData.length);
 
   return (
     <div className="flex-1">
