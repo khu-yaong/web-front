@@ -5,12 +5,14 @@ interface MemberState {
   memberInfo: MemberInfo | null;
   loading: boolean;
   error: string | null;
+  team: string | null;
 }
 
 const initialState: MemberState = {
   memberInfo: null,
   loading: false,
   error: null,
+  team: null,
 };
 
 const memberSlice = createSlice({
@@ -19,6 +21,9 @@ const memberSlice = createSlice({
   reducers: {
     setMemberInfo: (state, action: PayloadAction<MemberInfo>) => {
       state.memberInfo = action.payload;
+    },
+    setTeam: (state, action: PayloadAction<string>) => {
+      state.team = action.payload;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -29,6 +34,7 @@ const memberSlice = createSlice({
   },
 });
 
-export const { setMemberInfo, setLoading, setError } = memberSlice.actions;
+export const { setMemberInfo, setLoading, setError, setTeam } =
+  memberSlice.actions;
 
 export default memberSlice.reducer;

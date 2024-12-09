@@ -50,7 +50,6 @@ export const fetchMp3Files = async (
   const url = `http://34.237.154.47:8080/mp3-files/${encodeURIComponent(
     team
   )}/${encodeURIComponent(category)}`;
-  console.log(url);
 
   try {
     const response = await fetch(url, {
@@ -61,14 +60,13 @@ export const fetchMp3Files = async (
       },
     });
 
-    const responseText = await response.text(); // Get the response as text for debugging
-    console.log("Response Text:", responseText); // Log the raw response
+    const responseText = await response.text();
 
     if (!response.ok) {
       throw new Error(`Failed to fetch data: ${response.statusText}`);
     }
 
-    const data = JSON.parse(responseText); // Try parsing the response text
+    const data = JSON.parse(responseText);
 
     if (data.code === "SUCCESS") {
       return data.data;
