@@ -22,13 +22,21 @@ export default function WritePost({ addPost }: WritePostProps) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("시야 정보");
   const [error, setError] = useState<string | null>(null);
   const memberInfo = useSelector((state: RootState) => state.member.memberInfo);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setImage(e.target.files[0]);
+    const file = e.target.files ? e.target.files[0] : null;
+    setImage(file);
+
+    // 이미지 미리보기 설정
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setPreview(previewUrl);
+    } else {
+      setPreview(null);
     }
   };
 
@@ -54,6 +62,7 @@ export default function WritePost({ addPost }: WritePostProps) {
       setTitle("");
       setContent("");
       setImage(null);
+      setPreview(null);
     } catch (err: any) {
       setError(err.message || "포스트 작성에 실패했습니다.");
     }
@@ -82,7 +91,13 @@ export default function WritePost({ addPost }: WritePostProps) {
           />
         </div>
       </div>
-
+      {preview && (
+        <img
+          src={preview}
+          alt="Preview"
+          className="ml-20 xl:ml-28 w-32 xl:w-36"
+        />
+      )}
       <div className="w-5/6 flex justify-between items-center my-4 xl:px-5 ml-auto mt-8 md:mt-10">
         <div className="flex justify-center items-center">
           <label

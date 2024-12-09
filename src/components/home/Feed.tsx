@@ -147,7 +147,7 @@ export default function Feed({ posts }: FeedProps) {
             <h2 className="font-bold text-dark1 text-lg mt-1">{post.title}</h2>
             <p className="my-1 text-dark1">{post.content}</p>
             {post.imageUrl && (
-              <img src={post.imageUrl} alt="sample" className="w-80 h-80" />
+              <img src={post.imageUrl} alt="sample" className="w-72" />
             )}
             <div className="flex items-center gap-1.5 mt-5">
               <FiThumbsUp
@@ -195,7 +195,7 @@ export default function Feed({ posts }: FeedProps) {
                 <img
                   src={selectedPost.imageUrl}
                   alt="sample"
-                  className="mr-6"
+                  className="w-72 mr-6"
                 />
               )}
               <div className="flex items-center gap-1.5 mt-5 mx-1">
