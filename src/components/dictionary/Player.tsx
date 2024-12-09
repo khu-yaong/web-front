@@ -9,7 +9,7 @@ import ClubPicker from "components/layout/ClubPicker";
 import { BaseballPlayer } from "types/player";
 import { clubs } from "data/clubs";
 import useDebounce from "hooks/useDebounce";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function Player() {
   const navgaite = useNavigate();
@@ -22,13 +22,22 @@ export default function Player() {
   const [currentPage, setCurrentPage] = useState(1);
   const [wordsPerPage] = useState(10);
 
+  const [searchParams] = useSearchParams();
+  const team = searchParams.get("team") || null;
+
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   useEffect(() => {
     const fetchPlayers = async (query: string) => {
       setIsLoading(true);
       try {
-        const playersData = await getPlayers(1000, cursorId, cursorName, query);
+        const playersData = await getPlayers(
+          1000,
+          cursorId,
+          cursorName,
+          team,
+          query
+        );
         setPlayers(playersData);
       } catch (error) {
         console.error("Error fetching players:", error);
@@ -38,7 +47,7 @@ export default function Player() {
     };
 
     fetchPlayers(debouncedSearchQuery);
-  }, [cursorId, cursorName, debouncedSearchQuery]);
+  }, [cursorId, cursorName, debouncedSearchQuery, team]);
 
   const indexOfLastPlayer = currentPage * wordsPerPage;
   const indexOfFirstPlayer = indexOfLastPlayer - wordsPerPage;

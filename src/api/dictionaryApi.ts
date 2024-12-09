@@ -28,6 +28,7 @@ export const getPlayers = async (
   pageSize: number,
   cursorId: number | null,
   cursorName: string | null,
+  team: string | null,
   query: string | null
 ) => {
   try {
@@ -36,6 +37,7 @@ export const getPlayers = async (
         pageSize: pageSize,
         cursorId: cursorId ?? null,
         cursorName: cursorName ?? null,
+        team: team,
         query: query,
       },
     });
