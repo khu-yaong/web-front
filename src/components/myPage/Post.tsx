@@ -20,6 +20,15 @@ type Props = {
 };
 
 export default function Post({ posts }: any) {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${month}.${day}. ${hours}:${minutes}`;
+  };
+
   return (
     <div className="w-full grid gap-6 sm:gap-8 lg:gap-10 grid-cols-1 lg:grid-cols-2 mt-4">
       {posts.map((post: any) => (
@@ -34,7 +43,9 @@ export default function Post({ posts }: any) {
               <p className="text-lg lg:text-[21px] font-bold">
                 {post.authorName}
               </p>
-              <p className="text-lg text-dark2 ">{post.createdDate}</p>
+              <p className="text-lg text-dark2 ">
+                {formatDate(post.createdDate)}
+              </p>
             </div>
           </div>
           <p className="mt-3 lg:mt-4 text-lg lg:text-xl text-dark1 font-bold">

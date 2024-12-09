@@ -39,7 +39,7 @@ export const homeMenu = [
 ];
 
 export const mypageMenu = [
-  //{ title: "프로필", icon: HiOutlineUser, link: "/mypage/profile" },
+  { title: "프로필", icon: HiOutlineUser, link: "/mypage/profile" },
   {
     title: "야구 관람 일지",
     icon: HiOutlineCalendar,

@@ -18,6 +18,7 @@ export default function Profile() {
 
     return club ? club.imagePath : "/assets/images/logo.svg";
   }
+
   return (
     <div className="py-8 px-6 sm:py-12 lg:py-16 lg:px-9 xl:px-16">
       <div className="w-full flex flex-col lg:flex-row gap-4 lg:gap-8 justify-between">
@@ -50,11 +51,16 @@ export default function Profile() {
           </div>
         </div>
       </div>
-      <div className="w-full bg-white mt-8 sm:mt-16 lg:my-16 p-4 sm:px-6 sm:py-5 font-bold text-lg sm:text-2xl">
+      <div className="w-full bg-white mt-8 sm:mt-16 lg:my-12 p-4 sm:px-6 sm:py-5 font-bold text-lg sm:text-2xl">
         작성한 게시글
       </div>
-
-      <Post posts={memberInfo?.postList} />
+      {memberInfo?.postList ? (
+        <Post posts={memberInfo?.postList} />
+      ) : (
+        <div className="ml-4 text-dark3 font-bold text-xl">
+          작성한 게시글이 없습니다.
+        </div>
+      )}
     </div>
   );
 }
