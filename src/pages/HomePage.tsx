@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Sidebar from "components/layout/Sidebar";
 import { homeMenu } from "data/menu";
 import ClubPicker from "components/layout/ClubPicker";
@@ -12,11 +13,16 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [searchParams] = useSearchParams();
+  const category = (searchParams.get("category") || "VIEW").toUpperCase();
+  const pageSize = searchParams.get("pageSize") || "100";
+  const team = searchParams.get("team") || null;
+
   useEffect(() => {
     const loadPosts = async () => {
       try {
         setLoading(true);
-        const data = await fetchPosts("VIEW", 1000); // category와 pageSize 전달
+        const data = await fetchPosts(category, parseInt(pageSize), team); // category와 pageSize 전달
         setPosts(data);
         console.log(data);
         setError(null);
@@ -28,7 +34,7 @@ export default function Home() {
     };
 
     loadPosts();
-  }, []);
+  }, [category, pageSize, team]);
 
   // 새 포스트가 작성되면 Feed에 추가
   const addPost = (newPost: Post) => {

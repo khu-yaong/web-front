@@ -18,12 +18,24 @@ import {
 } from "react-icons/hi";
 
 export const homeMenu = [
-  { title: "시야 정보", icon: HiOutlineLocationMarker, link: "/home/view" },
-  { title: "관람 일지", icon: HiOutlineNewspaper, link: "/home/review" },
-  { title: "토론", icon: HiOutlineChatAlt2, link: "/home/discussion" },
-  { title: "잡담/수다", icon: HiOutlineVolumeUp, link: "/home/talk" },
-  { title: "꿀팁 공유", icon: HiOutlineSparkles, link: "/home/tip" },
-  { title: "기타", icon: HiOutlineDotsCircleHorizontal, link: "/home/etc" },
+  {
+    title: "시야 정보",
+    icon: HiOutlineLocationMarker,
+    link: "/home?category=view",
+  },
+  {
+    title: "관람 일지",
+    icon: HiOutlineNewspaper,
+    link: "/home?category=review",
+  },
+  { title: "토론", icon: HiOutlineChatAlt2, link: "/home?category=discussion" },
+  { title: "잡담/수다", icon: HiOutlineVolumeUp, link: "/home?category=talk" },
+  { title: "꿀팁 공유", icon: HiOutlineSparkles, link: "/home?category=tip" },
+  {
+    title: "기타",
+    icon: HiOutlineDotsCircleHorizontal,
+    link: "/home?category=etc",
+  },
 ];
 
 export const mypageMenu = [

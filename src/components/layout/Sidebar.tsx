@@ -21,7 +21,20 @@ export default function Sidebar({ menu }: Props) {
 
   const getLinkClass = (link: string | undefined) => {
     if (!link) return "";
-    return location.pathname.startsWith(link)
+
+    const linkUrl = new URL(link, window.location.origin); // link를 URL 객체로 변환
+    const currentPath = location.pathname;
+    const currentParams = new URLSearchParams(location.search);
+
+    const linkPath = linkUrl.pathname;
+    const linkParams = linkUrl.searchParams;
+
+    const isPathMatching = currentPath.startsWith(linkPath);
+    const isParamsMatching = Array.from(linkParams.keys()).every(
+      (key) => currentParams.get(key) === linkParams.get(key)
+    );
+
+    return isPathMatching && isParamsMatching
       ? "bg-main2 text-white"
       : "bg-white text-dark3 border border-dark3";
   };

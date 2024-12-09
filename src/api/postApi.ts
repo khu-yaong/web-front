@@ -10,12 +10,17 @@ const apiClient = axios.create({
   },
 });
 
-export const fetchPosts = async (category: string, pageSize: number) => {
+export const fetchPosts = async (
+  category: string,
+  pageSize: number,
+  team: string | null
+) => {
   try {
     const response = await apiClient.get(`/posts`, {
       params: {
         category,
         pageSize,
+        team,
       },
     });
     console.log(response.data.data);
