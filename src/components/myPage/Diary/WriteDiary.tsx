@@ -28,10 +28,18 @@ const WriteDiary: React.FC = () => {
   const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setImage(e.target.files[0]);
+    const file = e.target.files ? e.target.files[0] : null;
+    setImage(file);
+
+    // 이미지 미리보기 설정
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setPreview(previewUrl);
+    } else {
+      setPreview(null);
     }
   };
 
@@ -304,12 +312,16 @@ const WriteDiary: React.FC = () => {
             onChange={handleFileChange}
             className="hidden"
           />
-          <label htmlFor="image">
-            <HiOutlinePhotograph
-              className="cursor-pointer size-8 md:size-9"
-              color="#CCC"
-            />
-          </label>
+          {preview ? (
+            <img src={preview} alt="Preview" className="w-32 xl:w-36" />
+          ) : (
+            <label htmlFor="image">
+              <HiOutlinePhotograph
+                className="cursor-pointer size-8 md:size-9"
+                color="#CCC"
+              />
+            </label>
+          )}
         </>
       ) : (
         <div className="w-full text-base sm:text-xl flex items-center flex-wrap">

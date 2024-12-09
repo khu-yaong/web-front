@@ -50,11 +50,11 @@ const DiaryDetails: React.FC<{ diary: Diary }> = ({ diary }) => {
           onClick={() => setIsEditing(!isEditing)}
           className="text-dark2 hover:text-dark1"
         >
-          {isEditing ? (
+          {/*isEditing ? (
             <HiCheck className="size-7 xl:size-9" />
           ) : (
             <HiOutlinePencilAlt className="size-7 xl:size-9" />
-          )}
+          )*/}
         </button>
       </div>
 
