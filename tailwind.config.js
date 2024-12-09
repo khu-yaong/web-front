@@ -25,7 +25,7 @@ module.exports = {
         LG: "#A50034",
         DOOSAN: "#131230",
         LOTTE: "#041E42",
-        SAMSUNG: "074CA1",
+        SAMSUNG: "#074CA1",
         KIWOOM: "#570514",
         HANWHA: "#F37321",
         KIA: "#06141F",
