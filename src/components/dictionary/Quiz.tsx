@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 
 type QuizData = {
   question: string;
@@ -15,6 +17,7 @@ export default function Quiz() {
   const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const memberInfo = useSelector((state: RootState) => state.member.memberInfo);
 
   const [toast, setToast] = useState<{
     message: string;
@@ -110,14 +113,17 @@ export default function Quiz() {
           <div className="w-full flex mr-2 lg:mr-0">
             <div className="w-full flex justify-between text-base sm:text-lg lg:text-xl">
               <div className="flex">
-                <p className="text-dark1 font-bold">LV01. </p>
-                <p className="text-dark3 ml-1">야린이2 까지</p>
+                <p className="text-dark1 font-bold">LV1. </p>
+                <p className="text-dark3 ml-1">뉴비2 까지</p>
               </div>
-              <div className="text-dark1 font-bold">72%</div>
+              <div className="text-dark1 font-bold">
+                {" "}
+                {`${memberInfo?.nextLevelExp}%`}
+              </div>
             </div>
           </div>
           <div className="w-full h-3 sm:h-4 xl:h-6 relative bg-light3 rounded-3xl mt-2 mr-2 lg:mr-0">
-            <div className="w-9/12 h-full bg-dark3 rounded-3xl" />
+            <div className="w-8 h-full bg-dark3 rounded-3xl" />
           </div>
         </div>
       </div>

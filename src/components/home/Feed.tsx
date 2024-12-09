@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiThumbsUp, FiMessageSquare, FiSend } from "react-icons/fi";
 import { Post } from "types/post";
-import { addComment, likePost, fetchPostDetail } from "api/postApi";
+import { addComment, likePost, fetchPostDetail, deleteLike } from "api/postApi";
 import Modal from "components/layout/Modal";
 
 interface Comment {
@@ -38,13 +38,49 @@ export default function Feed({ posts }: FeedProps) {
           post.postId === postId
             ? {
                 ...post,
-                countLike: responseData.data.likeCount, // 서버에서 반환된 좋아요 수로 업데이트
+                countLike: responseData.data.likeCount,
+                isLiked: responseData.data.isLiked,
               }
             : post
         )
       );
+      if (selectedPost && selectedPost.postId === postId) {
+        setSelectedPost((prev) => ({
+          ...prev!,
+          countLike: responseData.data.likeCount,
+          isLiked: responseData.data.isLiked,
+        }));
+      }
     } catch (error: any) {
       alert(error.message || "Failed to like post");
+    }
+  };
+
+  // 좋아요 취소
+  const handleUnlike = async (postId: number) => {
+    try {
+      const responseData = await deleteLike(postId);
+      alert("게시글 좋아요를 취소하였습니다.");
+      setLikePosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.postId === postId
+            ? {
+                ...post,
+                countLike: responseData.data.likeCount,
+                isLiked: responseData.data.isLiked,
+              }
+            : post
+        )
+      );
+      if (selectedPost && selectedPost.postId === postId) {
+        setSelectedPost((prev) => ({
+          ...prev!,
+          countLike: responseData.data.likeCount,
+          isLiked: responseData.data.isLiked,
+        }));
+      }
+    } catch (error: any) {
+      alert(error.message || "좋아요 취소에 실패했습니다.");
     }
   };
 
@@ -71,11 +107,36 @@ export default function Feed({ posts }: FeedProps) {
 
     try {
       const response = await addComment(selectedPost.postId, newComment);
-      setComments((prevComments) => [...prevComments, response.data]);
+      const { comment, commentCount } = response.data;
+
+      setComments((prevComments) => [...prevComments, comment]);
+
+      setSelectedPost((prev) => ({
+        ...prev!,
+        countComment: commentCount,
+      }));
+
+      setLikePosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.postId === selectedPost.postId
+            ? { ...post, countComment: commentCount }
+            : post
+        )
+      );
+
       setNewComment("");
     } catch (error: any) {
       alert(error.message || "댓글 등록에 실패했습니다.");
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${month}.${day}. ${hours}:${minutes}`;
   };
 
   return (
@@ -99,22 +160,24 @@ export default function Feed({ posts }: FeedProps) {
 
             <div className="flex flex-col ml-1.5 md:ml-2 text-dark1 mb-1.5">
               <p className="font-extrabold">{post.authorName}</p>
-              <p className="text-sm">{post.createdDate}</p>
+              <p className="text-sm">{formatDate(post.createdDate)}</p>
             </div>
           </div>
           <div className="px-2 py-1 md:px-2.5 xl:px-6">
             <h2 className="font-bold text-dark1 text-lg mt-1">{post.title}</h2>
             <p className="my-1 text-dark1">{post.content}</p>
             {post.imageUrl && (
-              <img src={post.imageUrl} alt="sample" className="w-80 h-80" />
+              <img src={post.imageUrl} alt="sample" className="w-72" />
             )}
             <div className="flex items-center gap-1.5 mt-5">
               <FiThumbsUp
                 size={23}
-                color="#333"
+                color={post.isLiked ? "#00B286" : "#333"}
                 onClick={(e) => {
                   e.stopPropagation(); // 모달 오픈 방지
-                  handleLike(post.postId);
+                  post.isLiked
+                    ? handleUnlike(post.postId)
+                    : handleLike(post.postId);
                 }}
               />
               <span className="mr-2">{post.countLike}</span>
@@ -141,7 +204,7 @@ export default function Feed({ posts }: FeedProps) {
                 />
                 <div className="ml-2 text-sm">
                   <h3 className="font-extrabold">{selectedPost.authorName}</h3>
-                  <p>{selectedPost.createdDate}</p>
+                  <p>{formatDate(selectedPost.createdDate)}</p>
                 </div>
               </div>
               <h2 className="font-bold text-dark1 text-xl mb-2 mx-1">
@@ -152,14 +215,19 @@ export default function Feed({ posts }: FeedProps) {
                 <img
                   src={selectedPost.imageUrl}
                   alt="sample"
-                  className="mr-6"
+                  className="w-72 mr-6"
                 />
               )}
               <div className="flex items-center gap-1.5 mt-5 mx-1">
                 <FiThumbsUp
                   size={23}
-                  color="#333"
-                  onClick={() => handleLike(selectedPost.postId)}
+                  color={selectedPost.isLiked ? "#00B286" : "#333"}
+                  onClick={(e) => {
+                    selectedPost.isLiked
+                      ? handleUnlike(selectedPost.postId)
+                      : handleLike(selectedPost.postId);
+                  }}
+                  className="cursor-pointer"
                 />
                 <span>{selectedPost.countLike}</span>
                 <FiMessageSquare size={23} color="#333" />
@@ -180,12 +248,12 @@ export default function Feed({ posts }: FeedProps) {
                           : "/assets/images/default_profile.svg"
                       }
                       alt="profile"
-                      className="w-[40px]"
+                      className="w-[40px] h-[40px] rounded-full mr-1"
                     />
                     <div className="flex flex-col ml-1 text-sm text-dark1">
                       <p className="font-extrabold">{comment.authorName}</p>
                       <p className="text-dark3 text-xs">
-                        {comment.createdDate}
+                        {formatDate(comment.createdDate)}
                       </p>
                     </div>
                   </div>

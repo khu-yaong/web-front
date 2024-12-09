@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { createPost } from "api/postApi";
 import { Post } from "types/post";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 
 const categoryMapping: { [key: string]: string } = {
   "시야 정보": "VIEW",
@@ -20,12 +22,21 @@ export default function WritePost({ addPost }: WritePostProps) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("시야 정보");
   const [error, setError] = useState<string | null>(null);
+  const memberInfo = useSelector((state: RootState) => state.member.memberInfo);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setImage(e.target.files[0]);
+    const file = e.target.files ? e.target.files[0] : null;
+    setImage(file);
+
+    // 이미지 미리보기 설정
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setPreview(previewUrl);
+    } else {
+      setPreview(null);
     }
   };
 
@@ -39,17 +50,19 @@ export default function WritePost({ addPost }: WritePostProps) {
 
     try {
       const category = categoryMapping[selectedCategory];
-      let newPostData: Post;
+      let response;
       if (image) {
-        newPostData = await createPost(title, content, category, image);
+        response = await createPost(title, content, category, image);
       } else {
-        newPostData = await createPost(title, content, category);
+        response = await createPost(title, content, category);
       }
-      addPost(newPostData);
+      const newPost = response.data.post;
+      addPost(newPost);
 
       setTitle("");
       setContent("");
       setImage(null);
+      setPreview(null);
     } catch (err: any) {
       setError(err.message || "포스트 작성에 실패했습니다.");
     }
@@ -59,9 +72,9 @@ export default function WritePost({ addPost }: WritePostProps) {
     <div className="min-w-[440px] md:min-w-[520px] lg:min-w-xl xl:min-w-[700px] mx-2 md:mx-0 my-10 p-6 md:p-10 bg-white">
       <div className="flex items-center xl:px-4">
         <img
-          src="/assets/images/default_profile.svg"
+          src={memberInfo?.profileImageUrl}
           alt="profile"
-          className="w-[60px] xl:w-[70px]"
+          className="w-[50px] h-[50px] xl:w-[65px] xl:h-[65px] rounded-full mr-2"
         />
         <div className="flex flex-col w-full">
           <input
@@ -78,7 +91,13 @@ export default function WritePost({ addPost }: WritePostProps) {
           />
         </div>
       </div>
-
+      {preview && (
+        <img
+          src={preview}
+          alt="Preview"
+          className="ml-20 xl:ml-28 w-32 xl:w-36"
+        />
+      )}
       <div className="w-5/6 flex justify-between items-center my-4 xl:px-5 ml-auto mt-8 md:mt-10">
         <div className="flex justify-center items-center">
           <label

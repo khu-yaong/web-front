@@ -10,12 +10,17 @@ const apiClient = axios.create({
   },
 });
 
-export const fetchPosts = async (category: string, pageSize: number) => {
+export const fetchPosts = async (
+  category: string,
+  pageSize: number,
+  team: string | null
+) => {
   try {
     const response = await apiClient.get(`/posts`, {
       params: {
         category,
         pageSize,
+        team,
       },
     });
     console.log(response.data.data);
@@ -45,6 +50,23 @@ export const likePost = async (postId: number): Promise<any> => {
 
   const data = await response.json();
   return data;
+};
+
+export const deleteLike = async (postId: number) => {
+  try {
+    const response = await axios.delete(
+      `${API_BASE_URL}/posts/${postId}/likes`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
+          Accept: "*/*",
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Failed to delete like");
+  }
 };
 
 export const createPost = async (

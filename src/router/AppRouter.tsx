@@ -33,7 +33,14 @@ const AppRouter: React.FC = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<AuthPage authType="signIn" />} />
 
-        <Route path="/home" element={<PrivateRoute element={<HomePage />} />} />
+        <Route path="/home" element={<PrivateRoute element={<HomePage />} />}>
+          <Route path="view" element={<HomePage />} />
+          <Route path="review" element={<HomePage />} />
+          <Route path="discussion" element={<HomePage />} />
+          <Route path="talk" element={<HomePage />} />
+          <Route path="tip" element={<HomePage />} />
+          <Route path="etc" element={<HomePage />} />
+        </Route>
         <Route path="/mypage" element={<PrivateRoute element={<Mypage />} />}>
           <Route path="profile" index element={<Profile />} />
           <Route path="diary" element={<Diary />} />
