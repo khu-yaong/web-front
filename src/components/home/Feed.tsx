@@ -107,7 +107,12 @@ export default function Feed({ posts }: FeedProps) {
 
     try {
       const response = await addComment(selectedPost.postId, newComment);
-      setComments((prevComments) => [...prevComments, response.data]);
+      const { comment, commentCount } = response.data;
+      setComments((prevComments) => [...prevComments, comment]);
+      setSelectedPost((prev) => ({
+        ...prev!,
+        countComment: commentCount,
+      }));
       setNewComment("");
     } catch (error: any) {
       alert(error.message || "댓글 등록에 실패했습니다.");
@@ -223,7 +228,7 @@ export default function Feed({ posts }: FeedProps) {
                           : "/assets/images/default_profile.svg"
                       }
                       alt="profile"
-                      className="w-[40px]"
+                      className="w-[40px] h-[40px] rounded-full mr-1"
                     />
                     <div className="flex flex-col ml-1 text-sm text-dark1">
                       <p className="font-extrabold">{comment.authorName}</p>
