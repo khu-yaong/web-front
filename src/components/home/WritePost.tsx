@@ -42,13 +42,14 @@ export default function WritePost({ addPost }: WritePostProps) {
 
     try {
       const category = categoryMapping[selectedCategory];
-      let newPostData: Post;
+      let response;
       if (image) {
-        newPostData = await createPost(title, content, category, image);
+        response = await createPost(title, content, category, image);
       } else {
-        newPostData = await createPost(title, content, category);
+        response = await createPost(title, content, category);
       }
-      addPost(newPostData);
+      const newPost = response.data.post;
+      addPost(newPost);
 
       setTitle("");
       setContent("");

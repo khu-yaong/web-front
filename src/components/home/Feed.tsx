@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiThumbsUp, FiMessageSquare, FiSend } from "react-icons/fi";
 import { Post } from "types/post";
-import { addComment, likePost, fetchPostDetail } from "api/postApi";
+import { addComment, likePost, fetchPostDetail, deleteLike } from "api/postApi";
 import Modal from "components/layout/Modal";
 
 interface Comment {
@@ -38,13 +38,49 @@ export default function Feed({ posts }: FeedProps) {
           post.postId === postId
             ? {
                 ...post,
-                countLike: responseData.data.likeCount, // 서버에서 반환된 좋아요 수로 업데이트
+                countLike: responseData.data.likeCount,
+                isLiked: responseData.data.isLiked,
               }
             : post
         )
       );
+      if (selectedPost && selectedPost.postId === postId) {
+        setSelectedPost((prev) => ({
+          ...prev!,
+          countLike: responseData.data.likeCount,
+          isLiked: responseData.data.isLiked,
+        }));
+      }
     } catch (error: any) {
       alert(error.message || "Failed to like post");
+    }
+  };
+
+  // 좋아요 취소
+  const handleUnlike = async (postId: number) => {
+    try {
+      const responseData = await deleteLike(postId);
+      alert("게시글 좋아요를 취소하였습니다.");
+      setLikePosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.postId === postId
+            ? {
+                ...post,
+                countLike: responseData.data.likeCount,
+                isLiked: responseData.data.isLiked,
+              }
+            : post
+        )
+      );
+      if (selectedPost && selectedPost.postId === postId) {
+        setSelectedPost((prev) => ({
+          ...prev!,
+          countLike: responseData.data.likeCount,
+          isLiked: responseData.data.isLiked,
+        }));
+      }
+    } catch (error: any) {
+      alert(error.message || "좋아요 취소에 실패했습니다.");
     }
   };
 
@@ -111,10 +147,12 @@ export default function Feed({ posts }: FeedProps) {
             <div className="flex items-center gap-1.5 mt-5">
               <FiThumbsUp
                 size={23}
-                color="#333"
+                color={post.isLiked ? "#00B286" : "#333"}
                 onClick={(e) => {
                   e.stopPropagation(); // 모달 오픈 방지
-                  handleLike(post.postId);
+                  post.isLiked
+                    ? handleUnlike(post.postId)
+                    : handleLike(post.postId);
                 }}
               />
               <span className="mr-2">{post.countLike}</span>
@@ -158,8 +196,13 @@ export default function Feed({ posts }: FeedProps) {
               <div className="flex items-center gap-1.5 mt-5 mx-1">
                 <FiThumbsUp
                   size={23}
-                  color="#333"
-                  onClick={() => handleLike(selectedPost.postId)}
+                  color={selectedPost.isLiked ? "#00B286" : "#333"}
+                  onClick={(e) => {
+                    selectedPost.isLiked
+                      ? handleUnlike(selectedPost.postId)
+                      : handleLike(selectedPost.postId);
+                  }}
+                  className="cursor-pointer"
                 />
                 <span>{selectedPost.countLike}</span>
                 <FiMessageSquare size={23} color="#333" />
