@@ -108,11 +108,22 @@ export default function Feed({ posts }: FeedProps) {
     try {
       const response = await addComment(selectedPost.postId, newComment);
       const { comment, commentCount } = response.data;
+
       setComments((prevComments) => [...prevComments, comment]);
+
       setSelectedPost((prev) => ({
         ...prev!,
         countComment: commentCount,
       }));
+
+      setLikePosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.postId === selectedPost.postId
+            ? { ...post, countComment: commentCount }
+            : post
+        )
+      );
+
       setNewComment("");
     } catch (error: any) {
       alert(error.message || "댓글 등록에 실패했습니다.");
