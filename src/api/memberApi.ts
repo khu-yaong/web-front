@@ -1,6 +1,11 @@
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { setMemberInfo, setLoading, setError } from "store/slices/memberSlice";
+import {
+  setMemberInfo,
+  setLoading,
+  setError,
+  setTeam,
+} from "store/slices/memberSlice";
 
 export interface MemberInfo {
   username: string;
@@ -30,6 +35,7 @@ export const useMemberInfo = () => {
         }
       );
       dispatch(setMemberInfo(response.data.data));
+      dispatch(setTeam(response.data.data.team));
       console.log(response.data.data);
     } catch (error: any) {
       dispatch(
