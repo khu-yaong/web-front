@@ -1,13 +1,16 @@
 import { getRecommendVideos, getVideos, videoClick } from "api/videoApi";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setVideos, setReommendVideos } from "store/slices/videoSlice";
+import { RootState } from "store/store";
+import { clubs } from "data/clubs";
 
 export default function Video() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const memberInfo = useSelector((state: RootState) => state.member.memberInfo);
   const [teamVideos, setTeamVideos] = useState<any[]>([]);
   const [recommendVideos, setRecommendVideos] = useState<any[]>([]);
 
@@ -53,6 +56,17 @@ export default function Video() {
     }
   };
 
+  function getClubTitle(team: any): string {
+    if (!team) {
+      return "";
+    }
+    const club = clubs.find(
+      (club) => club.title === team || club.aliases === team
+    );
+
+    return club ? club.title : "";
+  }
+
   return (
     <div className="flex-1 py-8 pl-6 sm:py-12 sm:px-6 lg:py-10 lg:pl-3 xl:pl-10">
       <div className="mr-5 bg-white flex p-4 sm:py-5 sm:px-10 my-6 border items-center justify-between">
@@ -71,7 +85,7 @@ export default function Video() {
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         }}
       >
-        {teamVideos.slice(0, 5).map((item, index) => (
+        {recommendVideos.slice(0, 5).map((item, index) => (
           <div
             key={item.index}
             className="min-w-64 xl:max-w-96 mt-5 flex-shrink-0 flex flex-col cursor-pointer"
@@ -92,7 +106,7 @@ export default function Video() {
       </div>
       <div className="mr-5 bg-white flex p-4 sm:py-5 sm:px-10 my-6 border items-center justify-between">
         <h2 className="font-bold text-22px sm:text-27px">
-          KIA 타이거즈 관련 영상
+          {getClubTitle(memberInfo?.team)} 관련 영상
         </h2>
         <p
           className="text-dark3 text-lg sm:text-2xl font-bold cursor-pointer"
@@ -108,7 +122,7 @@ export default function Video() {
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         }}
       >
-        {recommendVideos.slice(0, 5).map((item, index) => (
+        {teamVideos.slice(0, 5).map((item, index) => (
           <div
             key={item.index}
             className="min-w-64 xl:max-w-96 mt-5 flex-shrink-0 flex flex-col cursor-pointer"

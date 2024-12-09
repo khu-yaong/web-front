@@ -26,7 +26,6 @@ apiClient.interceptors.request.use(
 export const getVideos = async () => {
   try {
     const response = await apiClient.get(`/videos`);
-    console.log("팀: ", response.data.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching words:", error);
@@ -38,7 +37,6 @@ export const getVideos = async () => {
 export const getRecommendVideos = async () => {
   try {
     const response = await apiClient.get(`/videos/recommendation`);
-    console.log("추천: ", response.data.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching words:", error);
