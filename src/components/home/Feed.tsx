@@ -144,7 +144,7 @@ export default function Feed({ posts }: FeedProps) {
       {likePosts.map((post) => (
         <div
           key={post.postId}
-          className="min-w-[440px] md:min-w-[520px] lg:min-w-xl xl:min-w-[700px] mx-2 md:mx-0 p-6 md:p-10 md:py-6 bg-white cursor-pointer"
+          className="w-[440px] md:w-[520px] lg:w-xl xl:w-[700px] mx-2 md:mx-0 p-6 md:p-10 md:py-6 bg-white cursor-pointer"
           onClick={() => openModal(post)}
         >
           <div className="flex items-center md:px-0.5 xl:px-5 mt-2">
