@@ -18,6 +18,7 @@ import {
 } from "react-icons/hi";
 
 export const homeMenu = [
+  { title: "잡담/수다", icon: HiOutlineVolumeUp, link: "/home?category=talk" },
   {
     title: "시야 정보",
     icon: HiOutlineLocationMarker,
@@ -29,7 +30,6 @@ export const homeMenu = [
     link: "/home?category=review",
   },
   { title: "토론", icon: HiOutlineChatAlt2, link: "/home?category=discussion" },
-  { title: "잡담/수다", icon: HiOutlineVolumeUp, link: "/home?category=talk" },
   { title: "꿀팁 공유", icon: HiOutlineSparkles, link: "/home?category=tip" },
   {
     title: "기타",

@@ -28,9 +28,6 @@ export default function Header() {
     alert("로그아웃했습니다.");
   };
 
-  if (["/", "/signup", "/signin"].includes(window.location.pathname))
-    return null;
-
   const getLinkClass = (path: string) =>
     `text-xl hover:text-black hover:font-semibold ${
       location.pathname.startsWith(path) ? "font-bold" : ""
@@ -49,7 +46,7 @@ export default function Header() {
           menuOpen ? "flex" : "hidden"
         } md:flex flex-col md:flex-row items-center space-y-4 md:space-y-0 space-x-0 md:space-x-5 lg:space-x-14 absolute md:relative top-16 right-0 md:top-0 bg-white md:bg-transparent w-full md:w-auto border-b-2 border-gray-200 md:border-0 p-4 md:p-0 z-10`}
       >
-        <Link to="/home?category=view" className={getLinkClass("/home")}>
+        <Link to="/home?category=talk" className={getLinkClass("/home")}>
           Home
         </Link>
         <Link to="/dictionary/words" className={getLinkClass("/dictionary")}>

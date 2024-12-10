@@ -3,12 +3,38 @@ import { useParams } from "react-router-dom";
 import { getPlayerInfo } from "api/dictionaryApi";
 import { clubs } from "data/clubs";
 import { TbPencilMinus } from "react-icons/tb";
+import Modal from "components/layout/Modal";
+import axios from "axios";
+
+const FIELD_LABELS: { [key: string]: string } = {
+  era: "평균자책점",
+  win: "승리",
+  lose: "패배",
+  sv: "세이브",
+  hld: "홀드",
+  so: "삼진",
+  ha: "피안타",
+  hra: "(피)홈런",
+  bb: "볼넷",
+  whip: "WHIP",
+};
 
 const PitcherDetail: React.FC = () => {
   const { playerId } = useParams<Record<string, string>>();
 
   const [player, setPlayer] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 선수 정보 수정 요청값
+  const [fields, setFields] = useState<{
+    [key: string]: { value: string; checked: boolean };
+  }>(
+    Object.keys(FIELD_LABELS).reduce((acc, key) => {
+      acc[key] = { value: "", checked: false };
+      return acc;
+    }, {} as { [key: string]: { value: string; checked: boolean } })
+  );
 
   useEffect(() => {
     const fetchPlayerData = async () => {
@@ -37,6 +63,10 @@ const PitcherDetail: React.FC = () => {
     return <div className="m-20">Loading...</div>;
   }
 
+  const openModal = async () => {
+    setIsModalOpen(true);
+  };
+
   function getClubImage(team: string): string {
     if (!team) {
       return "/assets/images/logo.svg";
@@ -48,23 +78,61 @@ const PitcherDetail: React.FC = () => {
     return club ? club.imagePath : "/assets/images/logo.svg";
   }
 
-  const pitcherStats = [
-    {
-      label: "평균자책점(방어율)",
-      value: player.pitcherRecord?.era,
-      key: "ERA",
-    },
-    { label: "승리", value: player.pitcherRecord?.win, key: "W" },
-    { label: "패배", value: player.pitcherRecord?.lose, key: "L" },
-    { label: "세이브", value: player.pitcherRecord?.sv, key: "SV" },
-    { label: "홀드", value: player.pitcherRecord?.hld, key: "HLD" },
-    { label: "이닝", value: player.pitcherRecord?.ip, key: "IP" },
-    { label: "삼진", value: player.pitcherRecord?.so, key: "SO" },
-    { label: "피안타", value: player.pitcherRecord?.ha, key: "HA" },
-    { label: "피홈런", value: player.pitcherRecord?.hra, key: "HR" },
-    { label: "볼넷", value: player.pitcherRecord?.bb, key: "BB" },
-    { label: "WHIP", value: player.pitcherRecord?.whip, key: "WHIP" },
-  ];
+  const handleFieldChange = (key: string, value: string) => {
+    setFields((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], value },
+    }));
+  };
+
+  const toggleFieldCheck = (key: string) => {
+    setFields((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], checked: !prev[key].checked },
+    }));
+  };
+
+  const updateStats = async () => {
+    const url = `http://34.237.154.47:8080/players/${playerId}/pitchers`;
+    const token = localStorage.getItem("accessToken");
+
+    const data = Object.entries(fields)
+      .filter(([_, field]) => field.checked)
+      .reduce<{ [key: string]: number }>((acc, [key, field]) => {
+        const numericValue = parseFloat(field.value);
+        if (!isNaN(numericValue)) {
+          acc[key] = numericValue;
+        }
+        return acc;
+      }, {});
+
+    if (Object.keys(data).length === 0) {
+      alert("수정할 값을 선택해주세요.");
+      return;
+    }
+
+    try {
+      const response = await axios.patch(url, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("Response:", response.data);
+      alert("정보 수정이 성공적으로 요청되었습니다.");
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error updating pitcher data:", error);
+      alert("정보 수정 요청이 실패하였습니다.");
+    }
+  };
+
+  const pitcherStats = Object.entries(FIELD_LABELS).map(([key, label]) => ({
+    label,
+    value: player.fielderRecord?.[key] || "-",
+    key,
+  }));
 
   return (
     <div className="flex-1">
@@ -114,6 +182,7 @@ const PitcherDetail: React.FC = () => {
             size="36"
             color="#999"
             className="mt-5 cursor-pointer"
+            onClick={openModal}
           />
         </div>
       </div>
@@ -137,6 +206,49 @@ const PitcherDetail: React.FC = () => {
           ))}
         </div>
       </div>
+      {isModalOpen && (
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <div className="flex flex-col h-[560px] items-center">
+            <h3 className="font-bold text-20px mb-1">선수 정보 수정 요청</h3>
+            <p className="text-dark2">수정할 정보를 입력해주세요</p>
+            <div className="w-[600px] grid grid-cols-2 border rounded-md mt-6 p-8 flex-col gap-4">
+              {Object.entries(fields).map(([key, field]) => (
+                <div
+                  key={key}
+                  className="flex items-center my-2 justify-between"
+                >
+                  <label className="text-dark1">{FIELD_LABELS[key]}</label>
+                  <input
+                    type="checkbox"
+                    checked={field.checked}
+                    onChange={() => toggleFieldCheck(key)}
+                  />
+                  <input
+                    value={field.value}
+                    onChange={(e) => handleFieldChange(key, e.target.value)}
+                    className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
+                    disabled={!field.checked} // 체크박스가 체크되지 않으면 입력 불가능
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-x-10 mt-8 font-bold">
+              <button
+                className="w-[160px] border p-2 rounded-md"
+                onClick={() => setIsModalOpen(false)}
+              >
+                취소
+              </button>
+              <button
+                className="w-[160px] bg-main2 text-white p-2 rounded-md"
+                onClick={updateStats}
+              >
+                수정 요청하기
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

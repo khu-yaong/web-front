@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPlayerInfo, updatePlayerInfo } from "api/dictionaryApi";
+import { getPlayerInfo } from "api/dictionaryApi";
 import { clubs } from "data/clubs";
 import { TbPencilMinus } from "react-icons/tb";
 import Modal from "components/layout/Modal";
+import axios from "axios";
+
+const FIELD_LABELS: { [key: string]: string } = {
+  avg: "타율",
+  hr: "홈런",
+  h: "안타",
+  r: "득점",
+  rbi: "타점",
+  sb: "도루",
+  obp: "출루율",
+  ops: "OPS",
+};
 
 const FielderDetail: React.FC = () => {
   const { playerId } = useParams<Record<string, string>>();
@@ -13,11 +25,14 @@ const FielderDetail: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 선수 정보 수정 요청값
-  const [battingAverage, setBattingAverage] = useState(""); // 타율
-  const [homeRuns, setHomeRuns] = useState(""); // 홈런
-  const [rbis, setRbis] = useState(""); // 타점
-  const [hits, setHits] = useState(""); // 안타
-  const [stolenBases, setStolenBases] = useState(""); // 도루
+  const [fields, setFields] = useState<{
+    [key: string]: { value: string; checked: boolean };
+  }>(
+    Object.keys(FIELD_LABELS).reduce((acc, key) => {
+      acc[key] = { value: "", checked: false };
+      return acc;
+    }, {} as { [key: string]: { value: string; checked: boolean } })
+  );
 
   useEffect(() => {
     const fetchPlayerData = async () => {
@@ -50,20 +65,52 @@ const FielderDetail: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleUpdatePlayer = async () => {
+  const handleFieldChange = (key: string, value: string) => {
+    setFields((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], value },
+    }));
+  };
+
+  const toggleFieldCheck = (key: string) => {
+    setFields((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], checked: !prev[key].checked },
+    }));
+  };
+
+  const updateStats = async () => {
+    const url = `http://34.237.154.47:8080/players/${playerId}/fielders`;
+    const token = localStorage.getItem("accessToken");
+
+    const data = Object.entries(fields)
+      .filter(([_, field]) => field.checked)
+      .reduce<{ [key: string]: number }>((acc, [key, field]) => {
+        const numericValue = parseFloat(field.value);
+        if (!isNaN(numericValue)) {
+          acc[key] = numericValue;
+        }
+        return acc;
+      }, {});
+
+    if (Object.keys(data).length === 0) {
+      alert("수정할 값을 선택해주세요.");
+      return;
+    }
+
     try {
-      const updatedData = {
-        battingAverage,
-        homeRuns,
-        rbis,
-        hits,
-        stolenBases,
-      };
+      const response = await axios.patch(url, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      await updatePlayerInfo(playerId, updatedData);
-
-      alert("정보 수정을 성공적으로 요청했습니다.");
+      console.log("Response:", response.data);
+      alert("정보 수정이 성공적으로 요청되었습니다.");
+      setIsModalOpen(false);
     } catch (error) {
+      console.error("Error updating pitcher data:", error);
       alert("정보 수정 요청이 실패하였습니다.");
     }
   };
@@ -79,20 +126,11 @@ const FielderDetail: React.FC = () => {
     return club ? club.imagePath : "/assets/images/logo.svg";
   }
 
-  const pitcherStats = [
-    {
-      label: "타율",
-      value: player.fielderRecord?.avg,
-      key: "AVG",
-    },
-    { label: "홈런", value: player.fielderRecord?.hr, key: "HR" },
-    { label: "안타", value: player.fielderRecord?.h, key: "H" },
-    { label: "득점", value: player.fielderRecord?.r, key: "R" },
-    { label: "타점", value: player.fielderRecord?.rbi, key: "RBI" },
-    { label: "도루", value: player.fielderRecord?.sb, key: "SB" },
-    { label: "출루율", value: player.fielderRecord?.obp, key: "OBP" },
-    { label: "OPS", value: player.fielderRecord?.ops, key: "OPS" },
-  ];
+  const pitcherStats = Object.entries(FIELD_LABELS).map(([key, label]) => ({
+    label,
+    value: player.fielderRecord?.[key] || "-",
+    key,
+  }));
 
   return (
     <div className="flex-1">
@@ -170,47 +208,26 @@ const FielderDetail: React.FC = () => {
           <div className="flex flex-col h-[500px] items-center">
             <h3 className="font-bold text-20px mb-1">선수 정보 수정 요청</h3>
             <p className="text-dark2">수정할 정보를 입력해주세요</p>
-            <div className="w-[450px] border rounded-md mt-6 p-8 flex flex-col gap-4">
-              <div className="flex items-center justify-center">
-                <label className="text-dark1 w-11">타율</label>
-                <input
-                  value={battingAverage}
-                  onChange={(e) => setBattingAverage(e.target.value)}
-                  className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
-                />
-              </div>
-              <div className="flex items-center justify-center">
-                <label className="text-dark1 w-11">홈런</label>
-                <input
-                  value={homeRuns}
-                  onChange={(e) => setHomeRuns(e.target.value)}
-                  className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
-                />
-              </div>
-              <div className="flex items-center justify-center">
-                <label className="text-dark1 w-11">타점</label>
-                <input
-                  value={rbis}
-                  onChange={(e) => setRbis(e.target.value)}
-                  className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
-                />
-              </div>
-              <div className="flex items-center justify-center">
-                <label className="text-dark1 w-11">안타</label>
-                <input
-                  value={hits}
-                  onChange={(e) => setHits(e.target.value)}
-                  className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
-                />
-              </div>
-              <div className="flex items-center justify-center">
-                <label className="text-dark1 w-11">도루</label>
-                <input
-                  value={stolenBases}
-                  onChange={(e) => setStolenBases(e.target.value)}
-                  className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
-                />
-              </div>
+            <div className="w-[550px] grid grid-cols-2 border rounded-md mt-6 p-8 flex-col gap-4">
+              {Object.entries(fields).map(([key, field]) => (
+                <div
+                  key={key}
+                  className="flex items-center my-2 justify-between"
+                >
+                  <label className="text-dark1">{FIELD_LABELS[key]}</label>
+                  <input
+                    type="checkbox"
+                    checked={field.checked}
+                    onChange={() => toggleFieldCheck(key)}
+                  />
+                  <input
+                    value={field.value}
+                    onChange={(e) => handleFieldChange(key, e.target.value)}
+                    className="w-36 border-b-2 border-light2 border-2 rounded-md p-1 text-dark2"
+                    disabled={!field.checked} // 체크박스가 체크되지 않으면 입력 불가능
+                  />
+                </div>
+              ))}
             </div>
             <div className="flex gap-x-10 mt-8 font-bold">
               <button
@@ -221,7 +238,7 @@ const FielderDetail: React.FC = () => {
               </button>
               <button
                 className="w-[160px] bg-main2 text-white p-2 rounded-md"
-                onClick={handleUpdatePlayer}
+                onClick={updateStats}
               >
                 수정 요청하기
               </button>

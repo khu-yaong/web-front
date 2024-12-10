@@ -19,7 +19,12 @@ export default function Dashboard() {
   };
 
   if (loading) return <div className="m-20 text-2xl">Loading...</div>;
-  if (error) return <p className="text-red-600 m-20">{error}</p>;
+  if (error)
+    return (
+      <p className="text-dark2 m-20 text-20px">
+        조회할 수 있는 경기가 없습니다. 다시 선택해 주세요.
+      </p>
+    );
 
   return (
     <div className="w-full">

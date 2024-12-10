@@ -57,12 +57,15 @@ export interface MatchInfo {
   gameData: GameData;
 }
 
-export const fetchMatchInfo = async (): Promise<MatchInfo> => {
-  const API_URL = "http://34.237.154.47:8080/api/fetch-aspx?id=20240815LGHH0";
+export const fetchMatchInfo = async ({
+  apiUrl,
+}: {
+  apiUrl: string;
+}): Promise<MatchInfo> => {
   const TOKEN = localStorage.getItem("accessToken");
 
   try {
-    const response = await axios.get(API_URL, {
+    const response = await axios.get(apiUrl, {
       headers: {
         Accept: "*/*",
         Authorization: `Bearer ${TOKEN}`,

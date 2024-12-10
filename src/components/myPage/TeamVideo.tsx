@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getVideos } from "api/videoApi";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
+import { clubs } from "data/clubs";
 
 export default function TeamVideo() {
+  const memberInfo = useSelector((state: RootState) => state.member.memberInfo);
   const [teamVideos, setTeamVideos] = useState<any[]>([]);
 
   useEffect(() => {
@@ -20,11 +24,22 @@ export default function TeamVideo() {
     fetchVideos();
   }, []);
 
+  function getClubTitle(team: any): string {
+    if (!team) {
+      return "";
+    }
+    const club = clubs.find(
+      (club) => club.title === team || club.aliases === team
+    );
+
+    return club ? club.title : "";
+  }
+
   return (
     <div className="w-full">
       <div className="w-full p-4 lg:py-8 lg:pl-20 bg-white border-b">
         <h1 className="font-bold text-2xl lg:text-3xl">
-          KIA 타이거즈 관련 영상
+          {getClubTitle(memberInfo?.team)} 관련 영상
         </h1>
       </div>
       <div
