@@ -7,11 +7,18 @@ export default function ClubPicker() {
   const location = useLocation();
 
   const handleClick = (team: string | null) => {
-    navigate(`?team=${team}`);
+    const searchParams = new URLSearchParams(location.search);
+    if (team) {
+      searchParams.set("team", team);
+    } else {
+      searchParams.delete("team");
+    }
+    navigate(`?${searchParams.toString()}`);
   };
 
   const isActive = (team: string) => {
-    return location.search === `?team=${team}`;
+    const searchParams = new URLSearchParams(location.search);
+    return searchParams.get("team") === team;
   };
 
   return (
@@ -28,6 +35,7 @@ export default function ClubPicker() {
       </p>
       {clubs.map((club, index) => (
         <div
+          key={club.title}
           className={`flex items-center cursor-pointer ${
             isActive(club.aliases)
               ? "border-b-2 border-main2 text-main2 font-bold"
