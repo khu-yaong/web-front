@@ -6,6 +6,7 @@ interface MemberState {
   loading: boolean;
   error: string | null;
   team: string | null;
+  level: number | null;
 }
 
 const initialState: MemberState = {
@@ -13,6 +14,7 @@ const initialState: MemberState = {
   loading: false,
   error: null,
   team: null,
+  level: null,
 };
 
 const memberSlice = createSlice({
@@ -25,6 +27,9 @@ const memberSlice = createSlice({
     setTeam: (state, action: PayloadAction<string>) => {
       state.team = action.payload;
     },
+    setLevel: (state, action: PayloadAction<number>) => {
+      state.level = action.payload;
+    },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
@@ -34,7 +39,7 @@ const memberSlice = createSlice({
   },
 });
 
-export const { setMemberInfo, setLoading, setError, setTeam } =
+export const { setMemberInfo, setLoading, setError, setTeam, setLevel } =
   memberSlice.actions;
 
 export default memberSlice.reducer;
