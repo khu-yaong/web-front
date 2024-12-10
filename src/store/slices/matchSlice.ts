@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchMatchInfo, MatchInfo } from "api/dashboardApi";
 
-export const fetchMatchData = createAsyncThunk<MatchInfo>(
+export const fetchMatchData = createAsyncThunk<MatchInfo, { apiUrl: string }>(
   "match/fetchData",
-  async () => {
-    const response = await fetchMatchInfo();
+  async ({ apiUrl }) => {
+    const response = await fetchMatchInfo({ apiUrl });
     return response;
   }
 );
@@ -13,12 +13,14 @@ interface MatchState {
   data: MatchInfo | null;
   loading: boolean;
   error: string | null;
+  apiUrl: string | null;
 }
 
 const initialState: MatchState = {
   data: null,
   loading: false,
   error: null,
+  apiUrl: null,
 };
 
 const matchSlice = createSlice({
