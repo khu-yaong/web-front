@@ -25,8 +25,8 @@ export const features: Feature[] = [
   },
   {
     imagePath: "/assets/images/number4.svg",
-    title: "야구 물품 거래 기능 제공",
+    title: "추천 클립 제공",
     description:
-      "굿즈를 비롯한 야구 물픔을 자유롭게 거래할 수 있습니다. 원하는 굿즈를 저렴한 값에 구매해 보세요.",
+      "사용자의 시청 데이터를 분석해 추천 영상을 제공합니다. 응원하는 구단의 하이라이트와 명장면을 확인해 보세요.",
   },
 ];
