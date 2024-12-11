@@ -26,6 +26,7 @@ export default function Header() {
   const handleSignOut = () => {
     dispatch(logout());
     alert("로그아웃했습니다.");
+    window.location.reload();
   };
 
   const getLinkClass = (path: string) =>

@@ -38,7 +38,8 @@ export default function AuthPage({ authType }: Props) {
           const { accesstoken } = response.data.data;
           dispatch(setAccessToken(accesstoken));
           alert("로그인에 성공했습니다.");
-          navigate("/home");
+          navigate("/home?category=talk", { replace: true });
+          window.location.reload();
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {
