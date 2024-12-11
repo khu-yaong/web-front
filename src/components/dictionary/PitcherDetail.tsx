@@ -130,7 +130,10 @@ const PitcherDetail: React.FC = () => {
 
   const pitcherStats = Object.entries(FIELD_LABELS).map(([key, label]) => ({
     label,
-    value: player.fielderRecord?.[key] || "-",
+    value:
+      player.pitcherRecord?.[key] === 0
+        ? 0
+        : player.pitcherRecord?.[key] || "-",
     key,
   }));
 
